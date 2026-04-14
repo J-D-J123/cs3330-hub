@@ -19,9 +19,9 @@ public class MainTest {
     
     @Test 
     /**
-     * getName() gets the name of the trap 
+     * testTrapDisarm() tests the disarm method 
      */
-    String getName() {
+    void testTrapDisarm() {
     	
     }
 }

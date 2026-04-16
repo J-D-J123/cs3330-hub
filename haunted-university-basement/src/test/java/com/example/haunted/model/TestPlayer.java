@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+/*  File: TestPlayer.java
+*	Name: Tucker Potts
+*	Desc: This test class also tests the getters as well as the isAlive method.
+*
+*/
 public class TestPlayer {
 	@ParameterizedTest
 	@CsvSource({

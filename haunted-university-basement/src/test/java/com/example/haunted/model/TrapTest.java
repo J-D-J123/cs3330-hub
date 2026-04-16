@@ -41,4 +41,9 @@ public class TrapTest {
 
         assertFalse(trap.isArmed());
     }
+
+    @Test
+    void testNullTrap() {
+        assertThrows(NullPointerException.class, () -> new Trap(null, null, 0, false, false));
+    }
 }

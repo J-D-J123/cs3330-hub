@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestGameIntegration.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.integration</a> &gt; <span class="el_source">TestGameIntegration.java</span></div><h1>TestGameIntegration.java</h1><pre class="source lang-java linenums">package com.example.haunted.integration;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.example.haunted.config.DungeonFactory;
+import com.example.haunted.engine.GameEngine;
+import com.example.haunted.events.CombatResult;
+import com.example.haunted.events.InteractionResult;
+import com.example.haunted.events.MoveResult;
+import com.example.haunted.model.Direction;
+
+/**
+ * File:    TestGameIntegration.java
+ * Author:  Jack Belleville
+ * Desc:    End-to-end integration tests that chain the movement, interaction,
+ *          and combat engines together through GameEngine. Covers the full
+ *          happy path to game victory (pick up key -&gt; unlock room -&gt; defeat
+ *          boss -&gt; recover gradebook) plus focused flows like locked-room
+ *          denial, trap triggering, and losing the game.
+ */
+<span class="fc" id="L24">public class TestGameIntegration {</span>
+
+    private GameEngine engine;
+
+    @BeforeEach
+    void setUp() {
+<span class="fc" id="L30">        engine = DungeonFactory.createGame();</span>
+<span class="fc" id="L31">    }</span>
+
+    @Test
+    void cannotMoveIntoLockedRoomWithoutKey() {
+<span class="fc" id="L35">        engine.move(Direction.EAST); // stairwell -&gt; lectureHall</span>
+<span class="fc" id="L36">        MoveResult result = engine.move(Direction.NORTH); // examArchive is locked</span>
+<span class="fc" id="L37">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L38">        assertEquals(&quot;The room is locked.&quot;, result.getMessage());</span>
+<span class="fc" id="L39">        assertEquals(&quot;lectureHall&quot;, engine.getCurrentRoom().getId());</span>
+<span class="fc" id="L40">    }</span>
+
+    @Test
+    void cannotMoveInDirectionWithNoExit() {
+<span class="fc" id="L44">        MoveResult result = engine.move(Direction.NORTH); // stairwell has no north exit</span>
+<span class="fc" id="L45">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L46">        assertEquals(&quot;There is no room in that direction.&quot;, result.getMessage());</span>
+<span class="fc" id="L47">        assertEquals(&quot;stairwell&quot;, engine.getCurrentRoom().getId());</span>
+<span class="fc" id="L48">    }</span>
+
+    @Test
+    void unlockFailsWithoutRequiredKey() {
+<span class="fc" id="L52">        engine.move(Direction.EAST);</span>
+<span class="fc" id="L53">        InteractionResult result = engine.unlockRoom(Direction.NORTH);</span>
+<span class="fc" id="L54">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L55">        assertEquals(&quot;You do not have the correct key.&quot;, result.getMessage());</span>
+<span class="fc" id="L56">    }</span>
+
+    @Test
+    void unlockFailsForNonExistentExit() {
+<span class="fc" id="L60">        InteractionResult result = engine.unlockRoom(Direction.SOUTH);</span>
+<span class="fc" id="L61">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L62">        assertEquals(&quot;There is no room in that direction.&quot;, result.getMessage());</span>
+<span class="fc" id="L63">    }</span>
+
+    @Test
+    void unlockAlreadyUnlockedRoomSucceedsWithMessage() {
+<span class="fc" id="L67">        InteractionResult result = engine.unlockRoom(Direction.EAST);</span>
+<span class="fc" id="L68">        assertTrue(result.isSuccess());</span>
+<span class="fc" id="L69">        assertEquals(&quot;The room is already unlocked.&quot;, result.getMessage());</span>
+<span class="fc" id="L70">    }</span>
+
+    @Test
+    void pickUpKeyThenUnlockExamArchive() {
+<span class="fc" id="L74">        engine.move(Direction.EAST);  // lectureHall</span>
+<span class="fc" id="L75">        engine.move(Direction.EAST);  // labStorage</span>
+<span class="fc" id="L76">        InteractionResult pick = engine.pickUpItem(&quot;Archive Key&quot;);</span>
+<span class="fc" id="L77">        assertTrue(pick.isSuccess());</span>
+<span class="fc" id="L78">        assertEquals(&quot;Picked up Archive Key.&quot;, pick.getMessage());</span>
+
+<span class="fc" id="L80">        engine.move(Direction.WEST);  // back to lectureHall</span>
+<span class="fc" id="L81">        InteractionResult unlock = engine.unlockRoom(Direction.NORTH);</span>
+<span class="fc" id="L82">        assertTrue(unlock.isSuccess());</span>
+<span class="fc" id="L83">        assertEquals(&quot;Unlocked Exam Archive.&quot;, unlock.getMessage());</span>
+
+<span class="fc" id="L85">        MoveResult move = engine.move(Direction.NORTH);</span>
+<span class="fc" id="L86">        assertTrue(move.isSuccess());</span>
+<span class="fc" id="L87">        assertEquals(&quot;examArchive&quot;, engine.getCurrentRoom().getId());</span>
+<span class="fc" id="L88">    }</span>
+
+    @Test
+    void elevatorTrapTriggersOnFirstEntryAndDisarmsAfter() {
+<span class="fc" id="L92">        engine.move(Direction.EAST); // lectureHall</span>
+<span class="fc" id="L93">        int hpBefore = engine.getPlayer().getHealth();</span>
+
+<span class="fc" id="L95">        MoveResult enter = engine.move(Direction.SOUTH); // brokenElevator</span>
+<span class="fc" id="L96">        assertTrue(enter.isSuccess());</span>
+<span class="fc" id="L97">        assertTrue(enter.isTrapTriggered());</span>
+<span class="fc" id="L98">        assertEquals(8, enter.getTrapDamage());</span>
+<span class="fc" id="L99">        assertEquals(hpBefore - 8, engine.getPlayer().getHealth());</span>
+
+        // Leave and re-enter: trap is one-time, must not trigger again.
+<span class="fc" id="L102">        engine.move(Direction.NORTH);</span>
+<span class="fc" id="L103">        int hpBeforeSecond = engine.getPlayer().getHealth();</span>
+<span class="fc" id="L104">        MoveResult reenter = engine.move(Direction.SOUTH);</span>
+<span class="fc" id="L105">        assertTrue(reenter.isSuccess());</span>
+<span class="fc" id="L106">        assertFalse(reenter.isTrapTriggered());</span>
+<span class="fc" id="L107">        assertEquals(0, reenter.getTrapDamage());</span>
+<span class="fc" id="L108">        assertEquals(hpBeforeSecond, engine.getPlayer().getHealth());</span>
+<span class="fc" id="L109">    }</span>
+
+    @Test
+    void cannotPickUpItemThatIsNotInRoom() {
+<span class="fc" id="L113">        InteractionResult result = engine.pickUpItem(&quot;Nonexistent Item&quot;);</span>
+<span class="fc" id="L114">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L115">        assertEquals(&quot;Item not found in the room.&quot;, result.getMessage());</span>
+<span class="fc" id="L116">    }</span>
+
+    @Test
+    void attackingNonexistentMonsterReturnsFailure() {
+<span class="fc" id="L120">        CombatResult result = engine.attack(&quot;Ghost That Isn't Here&quot;);</span>
+<span class="fc" id="L121">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L122">        assertEquals(&quot;Monster not found.&quot;, result.getMessage());</span>
+<span class="fc" id="L123">    }</span>
+
+    @Test
+    void usingItemNotInInventoryFails() {
+<span class="fc" id="L127">        InteractionResult result = engine.useItem(&quot;Coffee Potion&quot;);</span>
+<span class="fc" id="L128">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L129">        assertEquals(&quot;Item not found in inventory.&quot;, result.getMessage());</span>
+<span class="fc" id="L130">    }</span>
+
+    @Test
+    void equippingNonEquippableItemFails() {
+<span class="fc" id="L134">        engine.move(Direction.EAST); // lectureHall</span>
+<span class="fc" id="L135">        engine.pickUpItem(&quot;Coffee Potion&quot;);</span>
+<span class="fc" id="L136">        InteractionResult result = engine.equipItem(&quot;Coffee Potion&quot;);</span>
+<span class="fc" id="L137">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L138">        assertEquals(&quot;That item cannot be equipped.&quot;, result.getMessage());</span>
+<span class="fc" id="L139">    }</span>
+
+    @Test
+    void usingEquipmentItemFails() {
+<span class="fc" id="L143">        engine.move(Direction.EAST);</span>
+<span class="fc" id="L144">        engine.move(Direction.EAST); // labStorage</span>
+<span class="fc" id="L145">        engine.pickUpItem(&quot;Calculator Shield&quot;);</span>
+<span class="fc" id="L146">        InteractionResult result = engine.useItem(&quot;Calculator Shield&quot;);</span>
+<span class="fc" id="L147">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L148">        assertEquals(&quot;That item cannot be used.&quot;, result.getMessage());</span>
+<span class="fc" id="L149">    }</span>
+
+    @Test
+    void potionHealsPlayer() {
+<span class="fc" id="L153">        engine.move(Direction.EAST); // lectureHall</span>
+<span class="fc" id="L154">        engine.pickUpItem(&quot;Coffee Potion&quot;);</span>
+        // Damage the player enough that the +15 heal doesn't hit the maxHealth cap.
+<span class="fc" id="L156">        engine.getPlayer().takeDamage(30); // 50 -&gt; 20</span>
+<span class="fc" id="L157">        int hpBefore = engine.getPlayer().getHealth();</span>
+<span class="fc" id="L158">        assertEquals(20, hpBefore);</span>
+
+<span class="fc" id="L160">        InteractionResult use = engine.useItem(&quot;Coffee Potion&quot;);</span>
+<span class="fc" id="L161">        assertTrue(use.isSuccess());</span>
+<span class="fc" id="L162">        assertEquals(&quot;Used Coffee Potion.&quot;, use.getMessage());</span>
+<span class="fc" id="L163">        assertEquals(hpBefore + 15, engine.getPlayer().getHealth());</span>
+        // Potion consumed.
+<span class="fc" id="L165">        assertFalse(engine.getPlayer().getInventory().contains(&quot;Coffee Potion&quot;));</span>
+<span class="fc" id="L166">    }</span>
+
+    @Test
+    void combatDropsLootIntoRoomAndReturnsIt() {
+<span class="fc" id="L170">        engine.move(Direction.EAST); // lectureHall, has Sleep-Deprived TA</span>
+<span class="fc" id="L171">        attackUntilDefeated(&quot;Sleep-Deprived TA&quot;);</span>
+        // TA's loot is a Coffee Potion - two Coffee Potions should now be in the room.
+<span class="fc" id="L173">        long count = engine.getCurrentRoom().getItems().stream()</span>
+<span class="fc" id="L174">                .filter(i -&gt; i.getName().equals(&quot;Coffee Potion&quot;))</span>
+<span class="fc" id="L175">                .count();</span>
+<span class="fc" id="L176">        assertEquals(2, count);</span>
+<span class="fc" id="L177">    }</span>
+
+    @Test
+    void fullHappyPathWinsGame() {
+        // stairwell -&gt; lectureHall
+<span class="fc" id="L182">        assertTrue(engine.move(Direction.EAST).isSuccess());</span>
+<span class="fc" id="L183">        assertTrue(engine.pickUpItem(&quot;Coffee Potion&quot;).isSuccess());</span>
+<span class="fc" id="L184">        attackUntilDefeated(&quot;Sleep-Deprived TA&quot;);</span>
+
+        // lectureHall -&gt; labStorage
+<span class="fc" id="L187">        assertTrue(engine.move(Direction.EAST).isSuccess());</span>
+<span class="fc" id="L188">        assertTrue(engine.pickUpItem(&quot;Archive Key&quot;).isSuccess());</span>
+
+        // labStorage -&gt; serverCloset
+<span class="fc" id="L191">        assertTrue(engine.move(Direction.NORTH).isSuccess());</span>
+<span class="fc" id="L192">        assertTrue(engine.pickUpItem(&quot;Stapler of Justice&quot;).isSuccess());</span>
+<span class="fc" id="L193">        assertTrue(engine.equipItem(&quot;Stapler of Justice&quot;).isSuccess());</span>
+<span class="fc" id="L194">        attackUntilDefeated(&quot;Spreadsheet Golem&quot;);</span>
+<span class="fc" id="L195">        assertTrue(engine.pickUpItem(&quot;Dry Erase Sword&quot;).isSuccess());</span>
+<span class="fc" id="L196">        assertTrue(engine.equipItem(&quot;Dry Erase Sword&quot;).isSuccess());</span>
+
+        // serverCloset -&gt; labStorage -&gt; lectureHall
+<span class="fc" id="L199">        assertTrue(engine.move(Direction.SOUTH).isSuccess());</span>
+<span class="fc" id="L200">        assertTrue(engine.move(Direction.WEST).isSuccess());</span>
+
+        // Unlock and enter examArchive
+<span class="fc" id="L203">        assertTrue(engine.unlockRoom(Direction.NORTH).isSuccess());</span>
+<span class="fc" id="L204">        assertTrue(engine.move(Direction.NORTH).isSuccess());</span>
+<span class="fc" id="L205">        attackUntilDefeated(&quot;Plagiarism Ghost&quot;);</span>
+<span class="fc" id="L206">        assertTrue(engine.pickUpItem(&quot;Lost Gradebook&quot;).isSuccess());</span>
+<span class="fc" id="L207">        assertTrue(engine.getQuest().isGradebookRecovered());</span>
+<span class="fc" id="L208">        assertFalse(engine.getQuest().isComplete());</span>
+
+        // examArchive -&gt; deanVault
+<span class="fc" id="L211">        assertTrue(engine.move(Direction.EAST).isSuccess());</span>
+<span class="fc" id="L212">        attackUntilDefeated(&quot;Registrar Wraith&quot;);</span>
+<span class="fc" id="L213">        assertTrue(engine.pickUpItem(&quot;Graduation Gown Armor&quot;).isSuccess());</span>
+<span class="fc" id="L214">        assertTrue(engine.equipItem(&quot;Graduation Gown Armor&quot;).isSuccess());</span>
+<span class="fc" id="L215">        assertTrue(engine.pickUpItem(&quot;Vault Key&quot;).isSuccess());</span>
+
+        // Heal up before the boss.
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">        if (engine.getPlayer().getHealth() &lt; engine.getPlayer().getMaxHealth()) {</span>
+<span class="fc" id="L219">            engine.useItem(&quot;Coffee Potion&quot;);</span>
+        }
+
+        // Unlock and enter finalChamber; defeat boss.
+<span class="fc" id="L223">        assertTrue(engine.unlockRoom(Direction.NORTH).isSuccess());</span>
+<span class="fc" id="L224">        assertTrue(engine.move(Direction.NORTH).isSuccess());</span>
+<span class="fc" id="L225">        attackUntilDefeated(&quot;Final Exam Phantom&quot;);</span>
+
+<span class="fc" id="L227">        assertTrue(engine.getQuest().isPhantomDefeated());</span>
+<span class="fc" id="L228">        assertTrue(engine.getQuest().isComplete());</span>
+<span class="fc" id="L229">        assertTrue(engine.isGameWon());</span>
+<span class="fc" id="L230">        assertFalse(engine.isGameOver());</span>
+<span class="fc" id="L231">    }</span>
+
+    @Test
+    void playerLosesWhenHealthReachesZero() {
+        // Drive the player to 0 HP directly so the test doesn't depend on combat
+        // balance. Then verify isGameOver reflects it and that attacking
+        // returns &quot;Player is defeated.&quot;.
+<span class="fc" id="L238">        engine.move(Direction.EAST); // lectureHall (has a living monster)</span>
+<span class="fc" id="L239">        engine.getPlayer().takeDamage(9999);</span>
+<span class="fc" id="L240">        assertTrue(engine.isGameOver());</span>
+<span class="fc" id="L241">        assertFalse(engine.isGameWon());</span>
+<span class="fc" id="L242">        assertEquals(0, engine.getPlayer().getHealth());</span>
+
+<span class="fc" id="L244">        CombatResult result = engine.attack(&quot;Sleep-Deprived TA&quot;);</span>
+<span class="fc" id="L245">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L246">        assertEquals(&quot;Player is defeated.&quot;, result.getMessage());</span>
+<span class="fc" id="L247">    }</span>
+
+    @Test
+    void attackingAlreadyDefeatedMonsterReturnsAppropriateMessage() {
+<span class="fc" id="L251">        engine.move(Direction.EAST);</span>
+<span class="fc" id="L252">        attackUntilDefeated(&quot;Sleep-Deprived TA&quot;);</span>
+<span class="fc" id="L253">        CombatResult result = engine.attack(&quot;Sleep-Deprived TA&quot;);</span>
+<span class="fc" id="L254">        assertFalse(result.isSuccess());</span>
+<span class="fc" id="L255">        assertEquals(&quot;Monster is already defeated.&quot;, result.getMessage());</span>
+<span class="fc" id="L256">        assertTrue(result.isMonsterDefeated());</span>
+<span class="fc" id="L257">    }</span>
+
+    @Test
+    void itemLookupAndUnlockAreCaseInsensitive() {
+<span class="fc" id="L261">        engine.move(Direction.EAST);</span>
+<span class="fc" id="L262">        engine.move(Direction.EAST);</span>
+<span class="fc" id="L263">        assertTrue(engine.pickUpItem(&quot;archive key&quot;).isSuccess());</span>
+<span class="fc" id="L264">        engine.move(Direction.WEST);</span>
+        // Room.unlock matches key name case-insensitively.
+<span class="fc" id="L266">        assertTrue(engine.unlockRoom(Direction.NORTH).isSuccess());</span>
+<span class="fc" id="L267">    }</span>
+
+    private void attackUntilDefeated(String monsterName) {
+<span class="fc" id="L270">        int safety = 50;</span>
+<span class="pc bpc" id="L271" title="1 of 4 branches missed.">        while (engine.getCurrentRoom().findMonster(monsterName).orElseThrow().isAlive()</span>
+<span class="pc bpc" id="L272" title="1 of 2 branches missed.">                &amp;&amp; !engine.isGameOver()</span>
+<span class="fc" id="L273">                &amp;&amp; safety-- &gt; 0) {</span>
+<span class="fc" id="L274">            engine.attack(monsterName);</span>
+        }
+<span class="fc" id="L276">        assertFalse(engine.getCurrentRoom().findMonster(monsterName).orElseThrow().isAlive(),</span>
+<span class="fc" id="L277">                &quot;Failed to defeat &quot; + monsterName);</span>
+<span class="fc" id="L278">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

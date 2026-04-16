@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestBossMonster.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.model</a> &gt; <span class="el_source">TestBossMonster.java</span></div><h1>TestBossMonster.java</h1><pre class="source lang-java linenums">package com.example.haunted.model;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+/**
+ * File:    TestBossMonster.java
+ * Author:  Jack Belleville
+ * Desc:    Mutation-analysis tests for BossMonster. Specifically exercises the
+ *          boundary condition on getCurrentAttack (health &lt;= maxHealth/2).
+ */
+<span class="fc" id="L17">public class TestBossMonster {</span>
+
+    @ParameterizedTest
+    @CsvSource({
+        // maxHealth, damageTaken, baseAttack, enragedBonus, expectedCurrentAttack
+        &quot;40,  0, 10, 3, 10&quot;,   // full HP, not enraged
+        &quot;40, 19, 10, 3, 10&quot;,   // HP=21 &gt; 20, NOT enraged
+        &quot;40, 20, 10, 3, 13&quot;,   // HP=20 == max/2, enraged (boundary!)
+        &quot;40, 21, 10, 3, 13&quot;,   // HP=19, enraged
+        &quot;40, 40, 10, 3, 13&quot;,   // HP=0, still reports enraged
+        &quot;10,  5,  5, 2,  7&quot;    // odd-maxHealth-like boundary
+    })
+    void getCurrentAttackRespectsEnrageBoundary(int maxHp, int dmg, int baseAtk, int bonus, int expected) {
+<span class="fc" id="L30">        BossMonster boss = new BossMonster(&quot;Boss&quot;, maxHp, baseAtk, 0, List.of(), bonus);</span>
+<span class="fc" id="L31">        boss.takeDamage(dmg);</span>
+<span class="fc" id="L32">        assertEquals(expected, boss.getCurrentAttack());</span>
+<span class="fc" id="L33">    }</span>
+
+    @Test
+    void bossInheritsMonsterBehavior() {
+<span class="fc" id="L37">        BossMonster boss = new BossMonster(&quot;Boss&quot;, 100, 10, 5, List.of(), 3);</span>
+<span class="fc" id="L38">        assertEquals(&quot;Boss&quot;, boss.getName());</span>
+<span class="fc" id="L39">        assertEquals(100, boss.getMaxHealth());</span>
+<span class="fc" id="L40">        assertEquals(100, boss.getHealth());</span>
+<span class="fc" id="L41">        assertEquals(10, boss.getAttack());</span>
+<span class="fc" id="L42">        assertEquals(5, boss.getDefense());</span>
+<span class="fc" id="L43">        assertTrue(boss.isAlive());</span>
+<span class="fc" id="L44">    }</span>
+
+    @Test
+    void bossBaseAttackUnchangedEvenWhenEnraged() {
+<span class="fc" id="L48">        BossMonster boss = new BossMonster(&quot;Boss&quot;, 40, 10, 0, List.of(), 5);</span>
+<span class="fc" id="L49">        boss.takeDamage(30);</span>
+        // getAttack() returns the raw base attack, not enraged.
+<span class="fc" id="L51">        assertEquals(10, boss.getAttack());</span>
+        // getCurrentAttack() returns the enraged value.
+<span class="fc" id="L53">        assertEquals(15, boss.getCurrentAttack());</span>
+<span class="fc" id="L54">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

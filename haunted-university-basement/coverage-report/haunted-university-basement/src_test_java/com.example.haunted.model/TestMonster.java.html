@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestMonster.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.model</a> &gt; <span class="el_source">TestMonster.java</span></div><h1>TestMonster.java</h1><pre class="source lang-java linenums">package com.example.haunted.model;
+
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+<span class="fc" id="L9">public class TestMonster {</span>
+	
+	@ParameterizedTest
+	@CsvSource({
+		&quot;Frankenstein, 500, 70, 25&quot;
+	})
+	void isGettersWorkingForMonster(String name, int health, int damage, int defense) {
+<span class="fc" id="L16">		Monster monster = new Monster(name, health, damage, defense, new ArrayList&lt;&gt;());</span>
+		
+<span class="fc" id="L18">		assertAll(</span>
+<span class="fc" id="L19">				() -&gt; assertEquals(name, monster.getName()),</span>
+<span class="fc" id="L20">				() -&gt; assertEquals(health, monster.getHealth()),</span>
+<span class="fc" id="L21">				() -&gt; assertEquals(health, monster.getMaxHealth()),</span>
+<span class="fc" id="L22">				() -&gt; assertEquals(damage, monster.getAttack()),</span>
+<span class="fc" id="L23">				() -&gt; assertEquals(defense, monster.getDefense())</span>
+				);
+<span class="fc" id="L25">	}</span>
+	
+	@Test
+	void healthIsReducedForTakeDamage() {
+<span class="fc" id="L29">		Monster monster = new Monster(&quot;Frankenstein&quot;, 500, 70, 25, new ArrayList&lt;&gt;());</span>
+		
+<span class="fc" id="L31">		monster.takeDamage(100);</span>
+<span class="fc" id="L32">		assertEquals(400, monster.getHealth());</span>
+		
+<span class="fc" id="L34">	}</span>
+	
+	@Test
+	void noNegativeDamage() {
+<span class="fc" id="L38">		Monster monster = new Monster(&quot;Frankenstein&quot;, 500, 70, 25, new ArrayList&lt;&gt;());</span>
+		
+<span class="fc" id="L40">		monster.takeDamage(-50);</span>
+		
+<span class="fc" id="L42">		assertEquals(500, monster.getHealth());</span>
+<span class="fc" id="L43">	}</span>
+	
+	@Test
+	void makeSureIsAliveWorks() {
+<span class="fc" id="L47">		Monster monster = new Monster(&quot;Frankenstein&quot;, 500, 70, 25, new ArrayList&lt;&gt;());</span>
+		
+<span class="fc" id="L49">		monster.takeDamage(501);</span>
+		
+<span class="fc" id="L51">		assertFalse(monster.isAlive());</span>
+<span class="fc" id="L52">	}</span>
+	
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

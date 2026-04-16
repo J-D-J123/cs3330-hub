@@ -8,8 +8,8 @@ public class TestKey {
 	
 	@ParameterizedTest
 	@CsvSource({
-		"Name of the key",
-		"Description of the key"
+		"Archive Key, Opens the Exam Archive",
+		"Vault Key, Opens the Final Chamber"
 		})
 	void checkIfValuesNotNull(String name, String description) {
 		Key key = new Key(name, description);

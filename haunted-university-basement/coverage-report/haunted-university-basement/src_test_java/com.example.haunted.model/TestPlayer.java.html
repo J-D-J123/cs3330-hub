@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestPlayer.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.model</a> &gt; <span class="el_source">TestPlayer.java</span></div><h1>TestPlayer.java</h1><pre class="source lang-java linenums">package com.example.haunted.model;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+<span class="fc" id="L8">public class TestPlayer {</span>
+	@ParameterizedTest
+	@CsvSource({
+		&quot;Tucker, 100, 20, 10&quot;
+	})
+	void isBasicGettersWorkingForPlayer(String name, int health, int damage, int defense) {
+<span class="fc" id="L14">		Inventory inventory = new Inventory(50);</span>
+<span class="fc" id="L15">		Player player = new Player(name, health, damage, defense, inventory);</span>
+		
+<span class="fc" id="L17">		assertAll(</span>
+<span class="fc" id="L18">				() -&gt; assertEquals(name, player.getName()),</span>
+<span class="fc" id="L19">				() -&gt; assertEquals(health, player.getHealth()),</span>
+<span class="fc" id="L20">				() -&gt; assertEquals(health, player.getMaxHealth()),</span>
+<span class="fc" id="L21">				() -&gt; assertEquals(damage, player.getBaseAttack()),</span>
+<span class="fc" id="L22">				() -&gt; assertEquals(defense, player.getBaseDefense()),</span>
+<span class="fc" id="L23">				() -&gt; assertEquals(inventory, player.getInventory())</span>
+				);
+<span class="fc" id="L25">	}</span>
+	
+	@ParameterizedTest
+	@CsvSource({
+		&quot;Tucker, 100, 20, 10&quot;
+	})
+	void makeSureIsAliveWorks(String name, int health, int damage, int defense) {
+<span class="fc" id="L32">		Inventory inventory = new Inventory(50);</span>
+<span class="fc" id="L33">		Player player = new Player(name, health, damage, defense, inventory);</span>
+		
+<span class="fc" id="L35">		player.takeDamage(101);</span>
+		
+<span class="fc" id="L37">		assertFalse(player.isAlive());</span>
+<span class="fc" id="L38">	}</span>
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

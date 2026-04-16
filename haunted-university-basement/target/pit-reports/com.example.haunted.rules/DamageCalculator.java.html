@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>DamageCalculator.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package com.example.haunted.rules;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.example.haunted.model.BossMonster;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.example.haunted.model.Monster;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.example.haunted.model.Player;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>public class DamageCalculator {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public int calculatePlayerDamage(Player player, Monster monster) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_9'/>
+9
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_9'>2</a>
+<span>
+
+1. calculatePlayerDamage : replaced int return with 0 for com/example/haunted/rules/DamageCalculator::calculatePlayerDamage &rarr; KILLED<br/>
+
+2. calculatePlayerDamage : Replaced integer subtraction with addition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return Math.max(1, player.getAttackPower() - monster.getDefense());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public int calculateMonsterDamage(Monster monster, Player player) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_13'/>
+13
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_13'>1</a>
+<span>
+
+1. calculateMonsterDamage : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        int attack = monster instanceof BossMonster bossMonster ? bossMonster.getCurrentAttack() : monster.getAttack();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_14'/>
+14
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_14'>2</a>
+<span>
+
+1. calculateMonsterDamage : replaced int return with 0 for com/example/haunted/rules/DamageCalculator::calculateMonsterDamage &rarr; KILLED<br/>
+
+2. calculateMonsterDamage : Replaced integer subtraction with addition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return Math.max(1, attack - player.getDefensePower());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@113d0f75_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@113d0f75_9'>9</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_9'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculatePlayerDamage<br/><b>Killed by : </b>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculatePlayerDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#2]</span></span> replaced int return with 0 for com/example/haunted/rules/DamageCalculator::calculatePlayerDamage &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculatePlayerDamage<br/><b>Killed by : </b>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculatePlayerDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#2]</span></span> Replaced integer subtraction with addition &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@113d0f75_13'>13</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_13'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateMonsterDamage<br/><b>Killed by : </b>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[method:plainMonsterUsesItsOwnAttackValue()]</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@113d0f75_14'>14</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@113d0f75_14'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>calculateMonsterDamage<br/><b>Killed by : </b>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[method:plainMonsterUsesItsOwnAttackValue()]</span></span> replaced int return with 0 for com/example/haunted/rules/DamageCalculator::calculateMonsterDamage &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>calculateMonsterDamage<br/><b>Killed by : </b>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculateMonsterDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#4]</span></span> Replaced integer subtraction with addition &rarr; KILLED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+
+<li class='mutator'>EMPTY_RETURNS</li>
+
+<li class='mutator'>FALSE_RETURNS</li>
+
+<li class='mutator'>INCREMENTS</li>
+
+<li class='mutator'>INVERT_NEGS</li>
+
+<li class='mutator'>MATH</li>
+
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+
+<li class='mutator'>NULL_RETURNS</li>
+
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+
+<li class='mutator'>TRUE_RETURNS</li>
+
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[method:plainMonsterUsesItsOwnAttackValue()] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculateMonsterDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#4] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculateMonsterDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#2] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculateMonsterDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#3] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[method:bossEnrageBoundaryIsInclusive()] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[method:bossUsesNormalAttackWhenAboveHalfHealth()] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculateMonsterDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#5] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[method:bossUsesEnragedAttackWhenAtOrBelowHalfHealth()] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculateMonsterDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#1] (3 ms)</li><li>com.example.haunted.engine.TestCombatEngine.[engine:junit-jupiter]/[class:com.example.haunted.engine.TestCombatEngine]/[test-template:testAttack(com.example.haunted.model.Player, com.example.haunted.model.Monster, boolean, java.lang.String, int, int, boolean)]/[test-template-invocation:#4] (3 ms)</li><li>com.example.haunted.integration.TestGameIntegration.[engine:junit-jupiter]/[class:com.example.haunted.integration.TestGameIntegration]/[method:attackingAlreadyDefeatedMonsterReturnsAppropriateMessage()] (0 ms)</li><li>com.example.haunted.integration.TestGameIntegration.[engine:junit-jupiter]/[class:com.example.haunted.integration.TestGameIntegration]/[method:combatDropsLootIntoRoomAndReturnsIt()] (1 ms)</li><li>com.example.haunted.integration.TestGameIntegration.[engine:junit-jupiter]/[class:com.example.haunted.integration.TestGameIntegration]/[method:fullHappyPathWinsGame()] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculatePlayerDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#2] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculatePlayerDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#1] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculatePlayerDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#4] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculatePlayerDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#3] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculatePlayerDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#5] (0 ms)</li><li>com.example.haunted.rules.TestDamageCalculator.[engine:junit-jupiter]/[class:com.example.haunted.rules.TestDamageCalculator]/[test-template:calculatePlayerDamageFloorsAtOne(int, int, int, int)]/[test-template-invocation:#6] (0 ms)</li><li>com.example.haunted.engine.TestCombatEngine.[engine:junit-jupiter]/[class:com.example.haunted.engine.TestCombatEngine]/[test-template:testAttack(com.example.haunted.model.Player, com.example.haunted.model.Monster, boolean, java.lang.String, int, int, boolean)]/[test-template-invocation:#5] (1 ms)</li><li>com.example.haunted.engine.TestCombatEngine.[engine:junit-jupiter]/[class:com.example.haunted.engine.TestCombatEngine]/[method:testGetDroppedItems()] (0 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.15.0
+
+</body>
+</html>

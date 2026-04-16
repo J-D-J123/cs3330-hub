@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestTrapResolver.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.model</a> &gt; <span class="el_source">TestTrapResolver.java</span></div><h1>TestTrapResolver.java</h1><pre class="source lang-java linenums">/**
+* File: 		TestTrapResolver.java
+* Author:	Joey Johnson
+* Date:		04/15/2026
+* Desc:		tests for TrapResolver 
+* 				checks for traps that go off once they are armed. 
+* 				also tests the correct damage to be taken off per trap case.
+*
+* 			p.s. I will test on myself and give myself 20 health points to surivie 
+*/
+
+package com.example.haunted.model;
+
+// required libarys from junit 
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.Arguments;
+
+import java.util.stream.Stream;
+
+// files to be used when testing 
+import com.example.haunted.events.InteractionResult;
+import com.example.haunted.rules.TrapResolver;
+
+<span class="fc" id="L26">class TrapResolverTest {</span>
+
+<span class="fc" id="L28">    private TrapResolver resolver = new TrapResolver();</span>
+
+    // paramtierized test cases of different types STEAM as well as ELECTRIC 
+    static Stream&lt;Arguments&gt; trapCases() {
+<span class="fc" id="L32">        return Stream.of(</span>
+
+            // no trap bc of null 
+<span class="fc" id="L35">            Arguments.of(null, false, &quot;No trap was triggered.&quot;, 20),</span>
+
+            // trap is in the room but is not enabled so no damage is able to be done 
+            // i finally do not get attacked yayy :)
+<span class="fc" id="L39">            Arguments.of(new Trap(&quot;Steam Vent&quot;, TrapType.STEAM, 10, false, false),</span>
+<span class="fc" id="L40">                false, &quot;No trap was triggered.&quot;, 20),</span>
+
+            // the steam vent trap hits me for 15 health points   
+            // 20-15=5 health points 
+<span class="fc" id="L44">            Arguments.of(new Trap(&quot;Steam Vent&quot;, TrapType.STEAM, 15, true, false),</span>
+<span class="fc" id="L45">                true, &quot;Trap 'Steam Vent' triggered for 15 damage.&quot;, 5),</span>
+
+            // shock wire is a one time trap then does not trigger ever again 
+            // 20-10=10 health poitns
+<span class="fc" id="L49">            Arguments.of(new Trap(&quot;Shock Wire&quot;, TrapType.ELECTRIC, 10, true, true),</span>
+<span class="fc" id="L50">                true, &quot;Trap 'Shock Wire' triggered for 10 damage.&quot;, 10)</span>
+        );
+    }
+
+    /**
+     * the method testResolveTrapDealsCorrectDamage() tests the resolveTrap() method in TrapResolver 
+     * 	by comparing what the data is for example
+     * 	if the trap was succesfful 
+     * 	what message it reutrns
+     * 	what is the Player's hp after the trap 
+     * @param trap the Trap object 
+     * @param triggered if the trap was triggered or not 
+     * @param msg the message input to check the output message 
+     * @param hpAfter the player's hp after the trap 
+     */
+    @ParameterizedTest
+    @MethodSource(&quot;trapCases&quot;)
+    void testResolveTrap(Trap trap, boolean triggered, String msg, int hpAfter) {
+    	
+        // new player :) [me] so it is a clean instance every run 
+<span class="fc" id="L70">        Player joey = new Player(&quot;Joey&quot;, 20, 5, 5, new Inventory(10));</span>
+
+<span class="fc" id="L72">        InteractionResult result = resolver.resolveTrap(joey, trap);</span>
+
+        // check to see if the correct field is stored 
+<span class="fc" id="L75">        assertEquals(triggered, result.isSuccess());</span>
+<span class="fc" id="L76">        assertEquals(msg, result.getMessage());</span>
+<span class="fc" id="L77">        assertEquals(hpAfter, joey.getHealth());</span>
+<span class="fc" id="L78">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

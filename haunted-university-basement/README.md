@@ -29,3 +29,22 @@ Recover the **Lost Gradebook** and defeat the **Final Exam Phantom**.
 The game is won only when both are true:
 1. The player has obtained the `Lost Gradebook`
 2. The `Final Exam Phantom` has been defeated
+
+---
+
+# Group Assignment #3 — How to Run
+
+## Running the JUnit tests
+Right-click the project in Eclipse → **Run As → JUnit Test**.
+
+## Regenerating the Pitest mutation report
+Right-click the project → **Run As → Maven build...** → set Goals to
+`org.pitest:pitest-maven:mutationCoverage` → Run. Report lands in
+`target/pit-reports/index.html`.
+
+## Submitted reports
+- EclEmma coverage HTML: `coverage-report/index.html`
+- Pitest HTML / CSV / XML: `target/pit-reports/`
+
+## AI usage
+AI prompts are logged in `AI_PROMPTS.md` at the project root, per Section 9.

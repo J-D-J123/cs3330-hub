@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestDungeonFactory.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.config</a> &gt; <span class="el_source">TestDungeonFactory.java</span></div><h1>TestDungeonFactory.java</h1><pre class="source lang-java linenums">package com.example.haunted.config;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import com.example.haunted.engine.GameEngine;
+import com.example.haunted.model.BossMonster;
+import com.example.haunted.model.Direction;
+import com.example.haunted.model.Monster;
+import com.example.haunted.model.Player;
+import com.example.haunted.model.Room;
+import com.example.haunted.model.Trap;
+import com.example.haunted.model.TrapType;
+
+/**
+ * File:    TestDungeonFactory.java
+ * Author:  Jack Belleville
+ * Desc:    Verifies DungeonFactory.createGame() wires the world correctly:
+ *          all rooms exist, exits are bidirectional where expected, items are
+ *          placed in the correct rooms, monsters are placed correctly, locked
+ *          rooms require the right key, and traps are armed as configured.
+ */
+<span class="fc" id="L29">public class TestDungeonFactory {</span>
+
+    private GameEngine engine;
+    private Player player;
+
+    @BeforeEach
+    void setUp() {
+<span class="fc" id="L36">        engine = DungeonFactory.createGame();</span>
+<span class="fc" id="L37">        player = engine.getPlayer();</span>
+<span class="fc" id="L38">    }</span>
+
+    @Test
+    void gameEngineIsNotNull() {
+<span class="fc" id="L42">        assertNotNull(engine);</span>
+<span class="fc" id="L43">        assertNotNull(engine.getPlayer());</span>
+<span class="fc" id="L44">        assertNotNull(engine.getQuest());</span>
+<span class="fc" id="L45">        assertNotNull(engine.getCurrentRoom());</span>
+<span class="fc" id="L46">    }</span>
+
+    @Test
+    void playerStartsInStairwellWithCorrectStats() {
+<span class="fc" id="L50">        assertEquals(&quot;stairwell&quot;, player.getCurrentRoom().getId());</span>
+<span class="fc" id="L51">        assertEquals(&quot;Student Explorer&quot;, player.getName());</span>
+<span class="fc" id="L52">        assertEquals(50, player.getMaxHealth());</span>
+<span class="fc" id="L53">        assertEquals(50, player.getHealth());</span>
+<span class="fc" id="L54">        assertEquals(7, player.getBaseAttack());</span>
+<span class="fc" id="L55">        assertEquals(2, player.getBaseDefense());</span>
+<span class="fc" id="L56">        assertEquals(8, player.getInventory().getCapacity());</span>
+<span class="fc" id="L57">        assertNull(player.getEquippedWeapon());</span>
+<span class="fc" id="L58">        assertNull(player.getEquippedArmor());</span>
+<span class="fc" id="L59">    }</span>
+
+    @Test
+    void questStartsNotCompleted() {
+<span class="fc" id="L63">        assertEquals(&quot;Escape the Basement&quot;, engine.getQuest().getName());</span>
+<span class="fc" id="L64">        assertFalse(engine.getQuest().isComplete());</span>
+<span class="fc" id="L65">        assertFalse(engine.getQuest().isGradebookRecovered());</span>
+<span class="fc" id="L66">        assertFalse(engine.getQuest().isPhantomDefeated());</span>
+<span class="fc" id="L67">    }</span>
+
+    @ParameterizedTest
+    @CsvSource({
+        &quot;stairwell, Maintenance Stairwell&quot;,
+        &quot;lectureHall, Abandoned Lecture Hall&quot;,
+        &quot;labStorage, Lab Storage&quot;,
+        &quot;brokenElevator, Broken Elevator&quot;,
+        &quot;serverCloset, Server Closet&quot;,
+        &quot;examArchive, Exam Archive&quot;,
+        &quot;deanVault, Dean Vault&quot;,
+        &quot;finalChamber, Final Chamber&quot;
+    })
+    void allRoomsExistWithCorrectNames(String expectedId, String expectedName) {
+<span class="fc" id="L81">        Room room = findRoomById(expectedId);</span>
+<span class="fc" id="L82">        assertNotNull(room, &quot;Room not found: &quot; + expectedId);</span>
+<span class="fc" id="L83">        assertEquals(expectedName, room.getName());</span>
+<span class="fc" id="L84">        assertNotNull(room.getDescription());</span>
+<span class="fc" id="L85">    }</span>
+
+    @Test
+    void stairwellConnectsEastToLectureHall() {
+<span class="fc" id="L89">        Room stairwell = findRoomById(&quot;stairwell&quot;);</span>
+<span class="fc" id="L90">        assertEquals(&quot;lectureHall&quot;, stairwell.getExit(Direction.EAST).getId());</span>
+<span class="fc" id="L91">        assertNull(stairwell.getExit(Direction.NORTH));</span>
+<span class="fc" id="L92">        assertNull(stairwell.getExit(Direction.SOUTH));</span>
+<span class="fc" id="L93">        assertNull(stairwell.getExit(Direction.WEST));</span>
+<span class="fc" id="L94">    }</span>
+
+    @Test
+    void lectureHallHasFourExits() {
+<span class="fc" id="L98">        Room lectureHall = findRoomById(&quot;lectureHall&quot;);</span>
+<span class="fc" id="L99">        Map&lt;Direction, Room&gt; exits = lectureHall.getExits();</span>
+<span class="fc" id="L100">        assertEquals(4, exits.size());</span>
+<span class="fc" id="L101">        assertEquals(&quot;stairwell&quot;, exits.get(Direction.WEST).getId());</span>
+<span class="fc" id="L102">        assertEquals(&quot;labStorage&quot;, exits.get(Direction.EAST).getId());</span>
+<span class="fc" id="L103">        assertEquals(&quot;brokenElevator&quot;, exits.get(Direction.SOUTH).getId());</span>
+<span class="fc" id="L104">        assertEquals(&quot;examArchive&quot;, exits.get(Direction.NORTH).getId());</span>
+<span class="fc" id="L105">    }</span>
+
+    @Test
+    void bidirectionalExitsAreConsistent() {
+<span class="fc" id="L109">        Room stairwell = findRoomById(&quot;stairwell&quot;);</span>
+<span class="fc" id="L110">        Room lectureHall = findRoomById(&quot;lectureHall&quot;);</span>
+<span class="fc" id="L111">        assertSame(lectureHall, stairwell.getExit(Direction.EAST));</span>
+<span class="fc" id="L112">        assertSame(stairwell, lectureHall.getExit(Direction.WEST));</span>
+
+<span class="fc" id="L114">        Room deanVault = findRoomById(&quot;deanVault&quot;);</span>
+<span class="fc" id="L115">        Room finalChamber = findRoomById(&quot;finalChamber&quot;);</span>
+<span class="fc" id="L116">        assertSame(finalChamber, deanVault.getExit(Direction.NORTH));</span>
+<span class="fc" id="L117">        assertSame(deanVault, finalChamber.getExit(Direction.SOUTH));</span>
+<span class="fc" id="L118">    }</span>
+
+    @Test
+    void examArchiveIsLockedAndRequiresArchiveKey() {
+<span class="fc" id="L122">        Room examArchive = findRoomById(&quot;examArchive&quot;);</span>
+<span class="fc" id="L123">        assertTrue(examArchive.isLocked());</span>
+<span class="fc" id="L124">        assertEquals(&quot;Archive Key&quot;, examArchive.getRequiredKeyName());</span>
+<span class="fc" id="L125">    }</span>
+
+    @Test
+    void finalChamberIsLockedAndRequiresVaultKey() {
+<span class="fc" id="L129">        Room finalChamber = findRoomById(&quot;finalChamber&quot;);</span>
+<span class="fc" id="L130">        assertTrue(finalChamber.isLocked());</span>
+<span class="fc" id="L131">        assertEquals(&quot;Vault Key&quot;, finalChamber.getRequiredKeyName());</span>
+<span class="fc" id="L132">    }</span>
+
+    @Test
+    void brokenElevatorHasElectricTrap() {
+<span class="fc" id="L136">        Room brokenElevator = findRoomById(&quot;brokenElevator&quot;);</span>
+<span class="fc" id="L137">        Trap trap = brokenElevator.getTrap();</span>
+<span class="fc" id="L138">        assertNotNull(trap);</span>
+<span class="fc" id="L139">        assertEquals(&quot;Loose Wires Trap&quot;, trap.getName());</span>
+<span class="fc" id="L140">        assertEquals(TrapType.ELECTRIC, trap.getType());</span>
+<span class="fc" id="L141">        assertEquals(8, trap.getDamage());</span>
+<span class="fc" id="L142">        assertTrue(trap.isArmed());</span>
+<span class="fc" id="L143">        assertTrue(trap.isOneTimeTrigger());</span>
+<span class="fc" id="L144">    }</span>
+
+    @ParameterizedTest
+    @CsvSource({
+        &quot;lectureHall, Coffee Potion&quot;,
+        &quot;labStorage, Archive Key&quot;,
+        &quot;labStorage, Calculator Shield&quot;,
+        &quot;serverCloset, Stapler of Justice&quot;,
+        &quot;examArchive, Lost Gradebook&quot;,
+        &quot;deanVault, Vault Key&quot;
+    })
+    void itemsArePlacedInCorrectRooms(String roomId, String itemName) {
+<span class="fc" id="L156">        Room room = findRoomById(roomId);</span>
+<span class="fc" id="L157">        assertTrue(room.findItem(itemName).isPresent(),</span>
+<span class="fc" id="L158">                &quot;Item '&quot; + itemName + &quot;' missing from room '&quot; + roomId + &quot;'&quot;);</span>
+<span class="fc" id="L159">    }</span>
+
+    @ParameterizedTest
+    @CsvSource({
+        &quot;lectureHall, Sleep-Deprived TA, 18&quot;,
+        &quot;serverCloset, Spreadsheet Golem, 28&quot;,
+        &quot;examArchive, Plagiarism Ghost, 22&quot;,
+        &quot;deanVault, Registrar Wraith, 30&quot;,
+        &quot;finalChamber, Final Exam Phantom, 40&quot;
+    })
+    void monstersArePlacedInCorrectRooms(String roomId, String monsterName, int expectedHealth) {
+<span class="fc" id="L170">        Room room = findRoomById(roomId);</span>
+<span class="fc" id="L171">        Monster monster = room.findMonster(monsterName).orElse(null);</span>
+<span class="fc" id="L172">        assertNotNull(monster, &quot;Monster '&quot; + monsterName + &quot;' missing from '&quot; + roomId + &quot;'&quot;);</span>
+<span class="fc" id="L173">        assertEquals(expectedHealth, monster.getHealth());</span>
+<span class="fc" id="L174">    }</span>
+
+    @Test
+    void finalChamberBossIsBossMonsterInstance() {
+<span class="fc" id="L178">        Room finalChamber = findRoomById(&quot;finalChamber&quot;);</span>
+<span class="fc" id="L179">        Monster phantom = finalChamber.findMonster(&quot;Final Exam Phantom&quot;).orElseThrow();</span>
+<span class="fc" id="L180">        assertTrue(phantom instanceof BossMonster);</span>
+<span class="fc" id="L181">    }</span>
+
+    @Test
+    void unlockedRoomsAreNotLocked() {
+<span class="fc" id="L185">        assertFalse(findRoomById(&quot;stairwell&quot;).isLocked());</span>
+<span class="fc" id="L186">        assertFalse(findRoomById(&quot;lectureHall&quot;).isLocked());</span>
+<span class="fc" id="L187">        assertFalse(findRoomById(&quot;labStorage&quot;).isLocked());</span>
+<span class="fc" id="L188">        assertFalse(findRoomById(&quot;serverCloset&quot;).isLocked());</span>
+<span class="fc" id="L189">        assertFalse(findRoomById(&quot;deanVault&quot;).isLocked());</span>
+<span class="fc" id="L190">        assertFalse(findRoomById(&quot;brokenElevator&quot;).isLocked());</span>
+<span class="fc" id="L191">    }</span>
+
+    @Test
+    void gameIsNotWonOrOverAtStart() {
+<span class="fc" id="L195">        assertFalse(engine.isGameOver());</span>
+<span class="fc" id="L196">        assertFalse(engine.isGameWon());</span>
+<span class="fc" id="L197">    }</span>
+
+    /** Walk the room graph starting at the stairwell to locate any room by id. */
+    private Room findRoomById(String id) {
+<span class="fc" id="L201">        java.util.Set&lt;Room&gt; visited = new java.util.HashSet&lt;&gt;();</span>
+<span class="fc" id="L202">        java.util.Deque&lt;Room&gt; stack = new java.util.ArrayDeque&lt;&gt;();</span>
+<span class="fc" id="L203">        stack.push(engine.getCurrentRoom());</span>
+<span class="pc bpc" id="L204" title="1 of 2 branches missed.">        while (!stack.isEmpty()) {</span>
+<span class="fc" id="L205">            Room r = stack.pop();</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">            if (!visited.add(r)) continue;</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">            if (r.getId().equals(id)) return r;</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">            for (Room next : r.getExits().values()) {</span>
+<span class="fc" id="L209">                stack.push(next);</span>
+            }
+        }
+<span class="nc" id="L212">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

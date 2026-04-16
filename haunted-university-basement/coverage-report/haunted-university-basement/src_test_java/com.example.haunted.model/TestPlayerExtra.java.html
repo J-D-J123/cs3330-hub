@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestPlayerExtra.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.model</a> &gt; <span class="el_source">TestPlayerExtra.java</span></div><h1>TestPlayerExtra.java</h1><pre class="source lang-java linenums">package com.example.haunted.model;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+/**
+ * File:    TestPlayerExtra.java
+ * Author:  Jack Belleville
+ * Desc:    Supplemental mutation-analysis tests for Player. Targets the
+ *          Math.max/Math.min clamping in takeDamage and heal, the
+ *          attack/defense power computation (weapon + armor branches),
+ *          and equip null-guards.
+ */
+<span class="fc" id="L17">public class TestPlayerExtra {</span>
+
+    @ParameterizedTest
+    @CsvSource({
+        // maxHp, dmg, expectedHp
+        &quot;50,   0, 50&quot;,   // zero damage
+        &quot;50,  -5, 50&quot;,   // negative damage clamped to 0
+        &quot;50,  10, 40&quot;,   // normal
+        &quot;50,  50,  0&quot;,   // exact to zero
+        &quot;50, 100,  0&quot;    // overkill clamps at 0
+    })
+    void takeDamageClampsAtZeroAndIgnoresNegative(int maxHp, int dmg, int expected) {
+<span class="fc" id="L29">        Player p = new Player(&quot;P&quot;, maxHp, 1, 1, new Inventory(1));</span>
+<span class="fc" id="L30">        p.takeDamage(dmg);</span>
+<span class="fc" id="L31">        assertEquals(expected, p.getHealth());</span>
+<span class="fc" id="L32">    }</span>
+
+    @ParameterizedTest
+    @CsvSource({
+        // dmgTaken, heal, expectedHp (maxHp = 50)
+        &quot;20,   0, 30&quot;,    // zero heal
+        &quot;20,  -5, 30&quot;,    // negative heal ignored
+        &quot;20,  10, 40&quot;,    // normal
+        &quot;20,  30, 50&quot;,    // overheal clamps at maxHp
+        &quot; 0,  10, 50&quot;     // already full, still capped
+    })
+    void healClampsAtMaxAndIgnoresNegative(int dmg, int heal, int expected) {
+<span class="fc" id="L44">        Player p = new Player(&quot;P&quot;, 50, 1, 1, new Inventory(1));</span>
+<span class="fc" id="L45">        p.takeDamage(dmg);</span>
+<span class="fc" id="L46">        p.heal(heal);</span>
+<span class="fc" id="L47">        assertEquals(expected, p.getHealth());</span>
+<span class="fc" id="L48">    }</span>
+
+    @Test
+    void isAliveBoundaryAtZero() {
+<span class="fc" id="L52">        Player p = new Player(&quot;P&quot;, 10, 1, 1, new Inventory(1));</span>
+<span class="fc" id="L53">        assertTrue(p.isAlive());</span>
+<span class="fc" id="L54">        p.takeDamage(9);</span>
+<span class="fc" id="L55">        assertTrue(p.isAlive());</span>
+<span class="fc" id="L56">        p.takeDamage(1);</span>
+<span class="fc" id="L57">        assertFalse(p.isAlive()); // health == 0 is NOT alive</span>
+<span class="fc" id="L58">    }</span>
+
+    @Test
+    void attackPowerWithoutWeaponEqualsBaseAttack() {
+<span class="fc" id="L62">        Player p = new Player(&quot;P&quot;, 10, 7, 2, new Inventory(1));</span>
+<span class="fc" id="L63">        assertEquals(7, p.getAttackPower());</span>
+<span class="fc" id="L64">    }</span>
+
+    @Test
+    void attackPowerAddsWeaponBonus() {
+<span class="fc" id="L68">        Player p = new Player(&quot;P&quot;, 10, 7, 2, new Inventory(1));</span>
+<span class="fc" id="L69">        p.equipWeapon(new Weapon(&quot;W&quot;, &quot;d&quot;, 4));</span>
+<span class="fc" id="L70">        assertEquals(11, p.getAttackPower());</span>
+<span class="fc" id="L71">    }</span>
+
+    @Test
+    void defensePowerWithoutArmorEqualsBaseDefense() {
+<span class="fc" id="L75">        Player p = new Player(&quot;P&quot;, 10, 7, 2, new Inventory(1));</span>
+<span class="fc" id="L76">        assertEquals(2, p.getDefensePower());</span>
+<span class="fc" id="L77">    }</span>
+
+    @Test
+    void defensePowerAddsArmorBonus() {
+<span class="fc" id="L81">        Player p = new Player(&quot;P&quot;, 10, 7, 2, new Inventory(1));</span>
+<span class="fc" id="L82">        p.equipArmor(new Armor(&quot;A&quot;, &quot;d&quot;, 3));</span>
+<span class="fc" id="L83">        assertEquals(5, p.getDefensePower());</span>
+<span class="fc" id="L84">    }</span>
+
+    @Test
+    void equipWeaponNullRejected() {
+<span class="fc" id="L88">        Player p = new Player(&quot;P&quot;, 10, 7, 2, new Inventory(1));</span>
+<span class="pc" id="L89">        assertThrows(NullPointerException.class, () -&gt; p.equipWeapon(null));</span>
+<span class="fc" id="L90">    }</span>
+
+    @Test
+    void equipArmorNullRejected() {
+<span class="fc" id="L94">        Player p = new Player(&quot;P&quot;, 10, 7, 2, new Inventory(1));</span>
+<span class="pc" id="L95">        assertThrows(NullPointerException.class, () -&gt; p.equipArmor(null));</span>
+<span class="fc" id="L96">    }</span>
+
+    @Test
+    void constructorRejectsNullNameAndInventory() {
+<span class="fc" id="L100">        assertThrows(NullPointerException.class,</span>
+<span class="pc" id="L101">                () -&gt; new Player(null, 10, 1, 1, new Inventory(1)));</span>
+<span class="fc" id="L102">        assertThrows(NullPointerException.class,</span>
+<span class="pc" id="L103">                () -&gt; new Player(&quot;P&quot;, 10, 1, 1, null));</span>
+<span class="fc" id="L104">    }</span>
+
+    @Test
+    void setCurrentRoomRejectsNull() {
+<span class="fc" id="L108">        Player p = new Player(&quot;P&quot;, 10, 1, 1, new Inventory(1));</span>
+<span class="pc" id="L109">        assertThrows(NullPointerException.class, () -&gt; p.setCurrentRoom(null));</span>
+<span class="fc" id="L110">    }</span>
+
+    @Test
+    void equipReplacesExistingEquipment() {
+<span class="fc" id="L114">        Player p = new Player(&quot;P&quot;, 10, 7, 2, new Inventory(1));</span>
+<span class="fc" id="L115">        Weapon w1 = new Weapon(&quot;W1&quot;, &quot;d&quot;, 2);</span>
+<span class="fc" id="L116">        Weapon w2 = new Weapon(&quot;W2&quot;, &quot;d&quot;, 5);</span>
+<span class="fc" id="L117">        p.equipWeapon(w1);</span>
+<span class="fc" id="L118">        p.equipWeapon(w2);</span>
+<span class="fc" id="L119">        assertSame(w2, p.getEquippedWeapon());</span>
+<span class="fc" id="L120">        assertEquals(12, p.getAttackPower());</span>
+<span class="fc" id="L121">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

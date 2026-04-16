@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestCombatEngine.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.engine</a> &gt; <span class="el_source">TestCombatEngine.java</span></div><h1>TestCombatEngine.java</h1><pre class="source lang-java linenums">/**
+* File: 		TestCombatEngine.java
+* Author:	Joey Johnson
+* Date:		04/15/2026
+* Desc:		to test the CombatEngine.java file
+*
+* Functions to test:
+*  		attack() with null monster, dead player, dead monster,
+*  		attack that survives, and attack that defeats the monster
+*
+* 		In this example the Monster is the Ghost and I (Joey) am the player
+*/
+
+// package b/c why not
+package com.example.haunted.engine;
+
+// random ass packages for junit requiremtns for testing
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.Arguments;
+
+import java.util.List;
+import java.util.stream.Stream;
+
+// required classes in order to test CombatEngine
+import com.example.haunted.events.CombatResult;
+import com.example.haunted.model.Inventory;
+import com.example.haunted.model.Item;
+import com.example.haunted.model.Key;
+import com.example.haunted.model.Monster;
+import com.example.haunted.model.Player;
+import com.example.haunted.model.Room;
+import com.example.haunted.rules.DamageCalculator;
+import com.example.haunted.rules.QuestTracker;
+
+<span class="fc" id="L38">public class TestCombatEngine {</span>
+
+    // makes the CombatEngine with the constusturtor as well as the new DamageCalculator and QuestTracker()
+<span class="fc" id="L41">    private CombatEngine combatEngine = new CombatEngine(new DamageCalculator(), new QuestTracker());</span>
+
+    // since it is all custom objects i used a Stream
+    // https://www.arhohuttunen.com/junit-5-parameterized-tests/
+    static Stream&lt;Arguments&gt; combatScenarios() {
+
+        // dead player takes damage to kill the player me :( i need sleep please make me go to bed
+<span class="fc" id="L48">        Player deadPlayer = new Player(&quot;Dead Joey&quot;, 1, 5, 5, new Inventory(10));</span>
+<span class="fc" id="L49">        deadPlayer.takeDamage(100);</span>
+
+        // dead monster health to 0
+<span class="fc" id="L52">        Monster deadMonster = new Monster(&quot;Dead Ghost&quot;, 1, 3, 1, List.of());</span>
+<span class="fc" id="L53">        deadMonster.takeDamage(100);</span>
+
+<span class="fc" id="L55">        return Stream.of(</span>
+            // null monster
+<span class="fc" id="L57">            Arguments.of(new Player(&quot;Joey&quot;, 20, 5, 5, new Inventory(10)), null,</span>
+<span class="fc" id="L58">                false, &quot;Monster not found.&quot;, 0, 0, false),</span>
+
+            // dead player oh no i died :(
+<span class="fc" id="L61">            Arguments.of(deadPlayer, new Monster(&quot;Ghost&quot;, 100, 3, 1, List.of()),</span>
+<span class="fc" id="L62">                false, &quot;Player is defeated.&quot;, 0, 0, false),</span>
+
+            // monster is already dead
+<span class="fc" id="L65">            Arguments.of(new Player(&quot;Joey&quot;, 20, 5, 5, new Inventory(10)), deadMonster,</span>
+<span class="fc" id="L66">                false, &quot;Monster is already defeated.&quot;, 0, 0, true),</span>
+
+            // Joey attacks monster and the monster survivies
+<span class="fc" id="L69">            Arguments.of(new Player(&quot;Joey&quot;, 20, 5, 5, new Inventory(10)), new Monster(&quot;Ghost&quot;, 100, 3, 1, List.of()),</span>
+<span class="fc" id="L70">                true, &quot;Attacked Ghost.&quot;, 4, 1, false),</span>
+
+            // Joey attacks and kills the monster
+<span class="fc" id="L73">            Arguments.of(new Player(&quot;Joey&quot;, 20, 5, 5, new Inventory(10)), new Monster(&quot;Ghost&quot;, 1, 3, 1, List.of()),</span>
+<span class="fc" id="L74">                true, &quot;Defeated Ghost.&quot;, 4, 0, true)</span>
+        );
+    }
+
+    /**
+     * testAttack() uses parameterized test cases from the combatScenarios Stream
+     * 	and uses them as inputs to the testAttack method to check
+     * 	the results for each combat scenario
+     *
+     * @param player the Player object
+     * @param monster the Monster object
+     * @param expectedSuccess checks whether the attack call succeeds
+     * @param expectedMessage the expected message after the Attack
+     * @param expectedDmgToMonster the expected damage to the monster
+     * @param expectedDmgToPlayer the expected damage amount to the player
+     * @param expectedMonsterDefeated the boolean value if the monster should be defeated the monster should be defeated
+     */
+    @ParameterizedTest
+    @MethodSource(&quot;combatScenarios&quot;)
+    void testAttack(Player player, Monster monster, boolean expectedSuccess, String expectedMessage,
+    		int expectedDmgToMonster, int expectedDmgToPlayer, boolean expectedMonsterDefeated) {
+
+    		// Player player, Quest quest, Monster monster
+<span class="fc" id="L97">        CombatResult result = combatEngine.attack(player, null, monster);</span>
+
+        // check the field variables, check success, message, damage to player and monster, and if the monster died
+<span class="fc" id="L100">        assertEquals(expectedSuccess, result.isSuccess());</span>
+<span class="fc" id="L101">        assertEquals(expectedMessage, result.getMessage());</span>
+<span class="fc" id="L102">        assertEquals(expectedDmgToMonster, result.getDamageToMonster());</span>
+<span class="fc" id="L103">        assertEquals(expectedDmgToPlayer, result.getDamageToPlayer());</span>
+<span class="fc" id="L104">        assertEquals(expectedMonsterDefeated, result.isMonsterDefeated());</span>
+<span class="fc" id="L105">    }</span>
+
+    // test that loot from a defeated monster actually ends up in the dropped items list
+    /**
+     * the testGetDroppedItems() method makes a new Player named joey and a new Monster named ghost 
+     * 	and checks to see after joey kills the ghost if joey gets the room1Key object that the ghost had
+     */
+    @Test
+    void testGetDroppedItems() {
+    	
+    		// make new player (me)
+<span class="fc" id="L116">    		Player joey = new Player(&quot;Joey&quot;, 20, 5, 5, new Inventory(10)); </span>
+    		
+    		// assign joey to a new room &quot;Room1&quot;
+<span class="fc" id="L119">    		joey.setCurrentRoom(new Room(&quot;room1&quot;, &quot;Hallway&quot;, &quot;A Very Dark Hallway&quot;));</span>
+
+    		// make a ghost Monster and make it hold a key
+<span class="fc" id="L122">        Key room1Key = new Key(&quot;Key&quot;, &quot;Room1  Key&quot;);</span>
+<span class="fc" id="L123">        Monster ghost = new Monster(&quot;Ghost&quot;, 1, 3, 1, List.of(room1Key));</span>
+
+        // joey attacks the ghost =&gt; ghost dies 
+<span class="fc" id="L126">        CombatResult result = combatEngine.attack(joey, null, ghost);</span>
+
+        // ghost is dead and Player joey takes the ghost items which is the room1Key
+<span class="fc" id="L129">        assertTrue(result.isMonsterDefeated());</span>
+<span class="fc" id="L130">        assertEquals(1, result.getDroppedItems().size());</span>
+<span class="fc" id="L131">        assertEquals(&quot;Key&quot;, result.getDroppedItems().get(0).getName());</span>
+<span class="fc" id="L132">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

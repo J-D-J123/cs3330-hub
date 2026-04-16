@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestRoom.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.model</a> &gt; <span class="el_source">TestRoom.java</span></div><h1>TestRoom.java</h1><pre class="source lang-java linenums">package com.example.haunted.model;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * File:    TestRoom.java
+ * Author:  Jack Belleville
+ * Desc:    Mutation-analysis tests for Room. Targets locked/unlocked branches,
+ *          key-matching logic, case-insensitive item/monster lookup, and
+ *          hasLivingMonsters.
+ */
+<span class="fc" id="L16">public class TestRoom {</span>
+
+    @Test
+    void basicGettersReturnConstructorValues() {
+<span class="fc" id="L20">        Room r = new Room(&quot;id&quot;, &quot;Name&quot;, &quot;Desc&quot;);</span>
+<span class="fc" id="L21">        assertEquals(&quot;id&quot;, r.getId());</span>
+<span class="fc" id="L22">        assertEquals(&quot;Name&quot;, r.getName());</span>
+<span class="fc" id="L23">        assertEquals(&quot;Desc&quot;, r.getDescription());</span>
+<span class="fc" id="L24">    }</span>
+
+    @Test
+    void nullIdIsRejected() {
+<span class="pc" id="L28">        assertThrows(NullPointerException.class, () -&gt; new Room(null, &quot;n&quot;, &quot;d&quot;));</span>
+<span class="fc" id="L29">    }</span>
+
+    @Test
+    void newRoomHasNoTrapAndIsUnlocked() {
+<span class="fc" id="L33">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L34">        assertNull(r.getTrap());</span>
+<span class="fc" id="L35">        assertFalse(r.isLocked());</span>
+<span class="fc" id="L36">        assertNull(r.getRequiredKeyName());</span>
+<span class="fc" id="L37">        assertFalse(r.hasLivingMonsters());</span>
+<span class="fc" id="L38">    }</span>
+
+    @Test
+    void connectStoresExitAndGetExitRetrieves() {
+<span class="fc" id="L42">        Room a = new Room(&quot;a&quot;, &quot;A&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L43">        Room b = new Room(&quot;b&quot;, &quot;B&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L44">        a.connect(Direction.EAST, b);</span>
+<span class="fc" id="L45">        assertSame(b, a.getExit(Direction.EAST));</span>
+<span class="fc" id="L46">        assertNull(a.getExit(Direction.WEST));</span>
+<span class="fc" id="L47">    }</span>
+
+    @Test
+    void nullDirectionOrRoomRejectedByConnect() {
+<span class="fc" id="L51">        Room a = new Room(&quot;a&quot;, &quot;A&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L52">        Room b = new Room(&quot;b&quot;, &quot;B&quot;, &quot;d&quot;);</span>
+<span class="pc" id="L53">        assertThrows(NullPointerException.class, () -&gt; a.connect(null, b));</span>
+<span class="pc" id="L54">        assertThrows(NullPointerException.class, () -&gt; a.connect(Direction.EAST, null));</span>
+<span class="fc" id="L55">    }</span>
+
+    @Test
+    void exitsMapIsUnmodifiable() {
+<span class="fc" id="L59">        Room a = new Room(&quot;a&quot;, &quot;A&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L60">        Room b = new Room(&quot;b&quot;, &quot;B&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L61">        a.connect(Direction.EAST, b);</span>
+<span class="fc" id="L62">        assertThrows(UnsupportedOperationException.class,</span>
+<span class="pc" id="L63">                () -&gt; a.getExits().put(Direction.WEST, b));</span>
+<span class="fc" id="L64">    }</span>
+
+    @Test
+    void findItemAndRemoveItemAreCaseInsensitive() {
+<span class="fc" id="L68">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L69">        Key key = new Key(&quot;Archive Key&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L70">        r.addItem(key);</span>
+<span class="fc" id="L71">        assertTrue(r.findItem(&quot;archive key&quot;).isPresent());</span>
+<span class="fc" id="L72">        Item removed = r.removeItemByName(&quot;ARCHIVE KEY&quot;);</span>
+<span class="fc" id="L73">        assertSame(key, removed);</span>
+<span class="fc" id="L74">        assertTrue(r.findItem(&quot;Archive Key&quot;).isEmpty());</span>
+<span class="fc" id="L75">    }</span>
+
+    @Test
+    void removeItemByNameReturnsNullWhenNotFound() {
+<span class="fc" id="L79">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L80">        assertNull(r.removeItemByName(&quot;nope&quot;));</span>
+<span class="fc" id="L81">    }</span>
+
+    @Test
+    void itemsListIsUnmodifiable() {
+<span class="fc" id="L85">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L86">        r.addItem(new Key(&quot;A&quot;, &quot;d&quot;));</span>
+<span class="fc" id="L87">        assertThrows(UnsupportedOperationException.class,</span>
+<span class="pc" id="L88">                () -&gt; r.getItems().remove(0));</span>
+<span class="fc" id="L89">    }</span>
+
+    @Test
+    void monstersListIsUnmodifiable() {
+<span class="fc" id="L93">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L94">        r.addMonster(new Monster(&quot;M&quot;, 5, 1, 0, List.of()));</span>
+<span class="fc" id="L95">        assertThrows(UnsupportedOperationException.class,</span>
+<span class="pc" id="L96">                () -&gt; r.getMonsters().remove(0));</span>
+<span class="fc" id="L97">    }</span>
+
+    @Test
+    void findMonsterIsCaseInsensitive() {
+<span class="fc" id="L101">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L102">        r.addMonster(new Monster(&quot;Ghost&quot;, 5, 1, 0, List.of()));</span>
+<span class="fc" id="L103">        assertTrue(r.findMonster(&quot;ghost&quot;).isPresent());</span>
+<span class="fc" id="L104">        assertTrue(r.findMonster(&quot;GHOST&quot;).isPresent());</span>
+<span class="fc" id="L105">        assertTrue(r.findMonster(&quot;nope&quot;).isEmpty());</span>
+<span class="fc" id="L106">    }</span>
+
+    @Test
+    void hasLivingMonstersTransitionsWhenAllDie() {
+<span class="fc" id="L110">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L111">        Monster m1 = new Monster(&quot;a&quot;, 5, 1, 0, List.of());</span>
+<span class="fc" id="L112">        Monster m2 = new Monster(&quot;b&quot;, 5, 1, 0, List.of());</span>
+<span class="fc" id="L113">        r.addMonster(m1);</span>
+<span class="fc" id="L114">        r.addMonster(m2);</span>
+<span class="fc" id="L115">        assertTrue(r.hasLivingMonsters());</span>
+<span class="fc" id="L116">        m1.takeDamage(99);</span>
+<span class="fc" id="L117">        assertTrue(r.hasLivingMonsters());</span>
+<span class="fc" id="L118">        m2.takeDamage(99);</span>
+<span class="fc" id="L119">        assertFalse(r.hasLivingMonsters());</span>
+<span class="fc" id="L120">    }</span>
+
+    @Test
+    void unlockWithCorrectKeyOpensRoom() {
+<span class="fc" id="L124">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L125">        r.setLocked(true, &quot;Key A&quot;);</span>
+<span class="fc" id="L126">        assertTrue(r.isLocked());</span>
+<span class="fc" id="L127">        assertTrue(r.unlock(&quot;Key A&quot;));</span>
+<span class="fc" id="L128">        assertFalse(r.isLocked());</span>
+<span class="fc" id="L129">    }</span>
+
+    @Test
+    void unlockIsCaseInsensitive() {
+<span class="fc" id="L133">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L134">        r.setLocked(true, &quot;Key A&quot;);</span>
+<span class="fc" id="L135">        assertTrue(r.unlock(&quot;key a&quot;));</span>
+<span class="fc" id="L136">        assertFalse(r.isLocked());</span>
+<span class="fc" id="L137">    }</span>
+
+    @Test
+    void unlockWithWrongKeyFails() {
+<span class="fc" id="L141">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L142">        r.setLocked(true, &quot;Key A&quot;);</span>
+<span class="fc" id="L143">        assertFalse(r.unlock(&quot;Key B&quot;));</span>
+<span class="fc" id="L144">        assertTrue(r.isLocked());</span>
+<span class="fc" id="L145">    }</span>
+
+    @Test
+    void unlockWithNullKeyFailsWhenKeyRequired() {
+<span class="fc" id="L149">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L150">        r.setLocked(true, &quot;Key A&quot;);</span>
+<span class="fc" id="L151">        assertFalse(r.unlock(null));</span>
+<span class="fc" id="L152">        assertTrue(r.isLocked());</span>
+<span class="fc" id="L153">    }</span>
+
+    @Test
+    void unlockOnUnlockedRoomReturnsTrueAndStaysUnlocked() {
+<span class="fc" id="L157">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+        // default is unlocked
+<span class="fc" id="L159">        assertTrue(r.unlock(&quot;anything&quot;));</span>
+<span class="fc" id="L160">        assertFalse(r.isLocked());</span>
+<span class="fc" id="L161">    }</span>
+
+    @Test
+    void unlockOnLockedRoomWithNullRequiredKeyFails() {
+<span class="fc" id="L165">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L166">        r.setLocked(true, null);</span>
+<span class="fc" id="L167">        assertFalse(r.unlock(&quot;any&quot;));</span>
+<span class="fc" id="L168">        assertTrue(r.isLocked());</span>
+<span class="fc" id="L169">    }</span>
+
+    @Test
+    void setTrapAndGetTrapWorkTogether() {
+<span class="fc" id="L173">        Room r = new Room(&quot;id&quot;, &quot;n&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L174">        Trap t = new Trap(&quot;T&quot;, TrapType.STEAM, 5, true, false);</span>
+<span class="fc" id="L175">        r.setTrap(t);</span>
+<span class="fc" id="L176">        assertSame(t, r.getTrap());</span>
+<span class="fc" id="L177">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

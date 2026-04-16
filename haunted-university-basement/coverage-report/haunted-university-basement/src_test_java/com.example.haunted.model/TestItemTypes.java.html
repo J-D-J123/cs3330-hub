@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestItemTypes.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.model</a> &gt; <span class="el_source">TestItemTypes.java</span></div><h1>TestItemTypes.java</h1><pre class="source lang-java linenums">package com.example.haunted.model;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * File:    TestItemTypes.java
+ * Author:  Jack Belleville
+ * Desc:    Mutation-analysis tests for Item subclasses - Weapon, Armor,
+ *          Potion, Key, QuestItem - and the Item base class behavior
+ *          (name, description, toString, null-guard).
+ */
+<span class="fc" id="L14">public class TestItemTypes {</span>
+
+    @Test
+    void weaponStoresAttackBonus() {
+<span class="fc" id="L18">        Weapon w = new Weapon(&quot;Sword&quot;, &quot;desc&quot;, 4);</span>
+<span class="fc" id="L19">        assertEquals(&quot;Sword&quot;, w.getName());</span>
+<span class="fc" id="L20">        assertEquals(&quot;desc&quot;, w.getDescription());</span>
+<span class="fc" id="L21">        assertEquals(4, w.getAttackBonus());</span>
+<span class="fc" id="L22">    }</span>
+
+    @Test
+    void armorStoresDefenseBonus() {
+<span class="fc" id="L26">        Armor a = new Armor(&quot;Shield&quot;, &quot;desc&quot;, 3);</span>
+<span class="fc" id="L27">        assertEquals(&quot;Shield&quot;, a.getName());</span>
+<span class="fc" id="L28">        assertEquals(&quot;desc&quot;, a.getDescription());</span>
+<span class="fc" id="L29">        assertEquals(3, a.getDefenseBonus());</span>
+<span class="fc" id="L30">    }</span>
+
+    @Test
+    void potionStoresHealingAmount() {
+<span class="fc" id="L34">        Potion p = new Potion(&quot;Elixir&quot;, &quot;d&quot;, 15);</span>
+<span class="fc" id="L35">        assertEquals(15, p.getHealingAmount());</span>
+<span class="fc" id="L36">    }</span>
+
+    @Test
+    void potionUseHealsTargetPlayer() {
+<span class="fc" id="L40">        Player player = new Player(&quot;P&quot;, 50, 1, 1, new Inventory(1));</span>
+<span class="fc" id="L41">        player.takeDamage(20);</span>
+<span class="fc" id="L42">        Potion p = new Potion(&quot;Elixir&quot;, &quot;d&quot;, 15);</span>
+<span class="fc" id="L43">        p.use(player);</span>
+<span class="fc" id="L44">        assertEquals(45, player.getHealth());</span>
+<span class="fc" id="L45">    }</span>
+
+    @Test
+    void potionUseDoesNotExceedMaxHealth() {
+<span class="fc" id="L49">        Player player = new Player(&quot;P&quot;, 50, 1, 1, new Inventory(1));</span>
+<span class="fc" id="L50">        player.takeDamage(5);</span>
+<span class="fc" id="L51">        Potion p = new Potion(&quot;Elixir&quot;, &quot;d&quot;, 99);</span>
+<span class="fc" id="L52">        p.use(player);</span>
+<span class="fc" id="L53">        assertEquals(50, player.getHealth());</span>
+<span class="fc" id="L54">    }</span>
+
+    @Test
+    void keyIsAnItem() {
+<span class="fc" id="L58">        Key k = new Key(&quot;Archive Key&quot;, &quot;desc&quot;);</span>
+<span class="fc" id="L59">        assertEquals(&quot;Archive Key&quot;, k.getName());</span>
+<span class="fc" id="L60">        assertEquals(&quot;desc&quot;, k.getDescription());</span>
+<span class="fc" id="L61">        assertTrue(k instanceof Item);</span>
+<span class="fc" id="L62">    }</span>
+
+    @Test
+    void questItemIsAnItem() {
+<span class="fc" id="L66">        QuestItem q = new QuestItem(&quot;Gradebook&quot;, &quot;d&quot;);</span>
+<span class="fc" id="L67">        assertEquals(&quot;Gradebook&quot;, q.getName());</span>
+<span class="fc" id="L68">        assertTrue(q instanceof Item);</span>
+<span class="fc" id="L69">    }</span>
+
+    @Test
+    void itemToStringReturnsName() {
+<span class="fc" id="L73">        Key k = new Key(&quot;Archive Key&quot;, &quot;desc&quot;);</span>
+<span class="fc" id="L74">        assertEquals(&quot;Archive Key&quot;, k.toString());</span>
+<span class="fc" id="L75">    }</span>
+
+    @Test
+    void itemRejectsNullName() {
+<span class="pc" id="L79">        assertThrows(NullPointerException.class, () -&gt; new Key(null, &quot;d&quot;));</span>
+<span class="fc" id="L80">    }</span>
+
+    @Test
+    void itemRejectsNullDescription() {
+<span class="pc" id="L84">        assertThrows(NullPointerException.class, () -&gt; new Key(&quot;n&quot;, null));</span>
+<span class="fc" id="L85">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestDamageCalculator.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</a> &gt; <a href="../../index.html" class="el_group">haunted-university-basement</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">com.example.haunted.rules</a> &gt; <span class="el_source">TestDamageCalculator.java</span></div><h1>TestDamageCalculator.java</h1><pre class="source lang-java linenums">package com.example.haunted.rules;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import com.example.haunted.model.Armor;
+import com.example.haunted.model.BossMonster;
+import com.example.haunted.model.Inventory;
+import com.example.haunted.model.Monster;
+import com.example.haunted.model.Player;
+import com.example.haunted.model.Weapon;
+
+/**
+ * File:    TestDamageCalculator.java
+ * Author:  Jack Belleville
+ * Desc:    Mutation-analysis tests for DamageCalculator. Targets the Math.max(1, ...)
+ *          floor (conditional boundary mutation) and the BossMonster enrage branch
+ *          inside calculateMonsterDamage.
+ */
+<span class="fc" id="L25">public class TestDamageCalculator {</span>
+
+<span class="fc" id="L27">    private final DamageCalculator calc = new DamageCalculator();</span>
+
+    @ParameterizedTest
+    @CsvSource({
+        // attack, weaponBonus, monsterDef, expectedDamage
+        &quot;5,  0,  2, 3&quot;,   // normal
+        &quot;10, 0,  4, 6&quot;,   // normal
+        &quot;2,  0,  1, 1&quot;,   // minimal positive
+        &quot;1,  0,  5, 1&quot;,   // attack &lt; def  =&gt; floor at 1 (kills the Math.max mutant)
+        &quot;5,  0,  5, 1&quot;,   // attack == def =&gt; floor at 1 (boundary)
+        &quot;3,  4,  2, 5&quot;    // weapon bonus applied
+    })
+    void calculatePlayerDamageFloorsAtOne(int atk, int bonus, int def, int expected) {
+<span class="fc" id="L40">        Player p = new Player(&quot;P&quot;, 10, atk, 0, new Inventory(1));</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (bonus &gt; 0) p.equipWeapon(new Weapon(&quot;W&quot;, &quot;d&quot;, bonus));</span>
+<span class="fc" id="L42">        Monster m = new Monster(&quot;M&quot;, 10, 1, def, List.of());</span>
+<span class="fc" id="L43">        assertEquals(expected, calc.calculatePlayerDamage(p, m));</span>
+<span class="fc" id="L44">    }</span>
+
+    @ParameterizedTest
+    @CsvSource({
+        // monsterAtk, playerDef, armorBonus, expectedDamage
+        &quot;6,  2,  0, 4&quot;,
+        &quot;10, 4,  0, 6&quot;,
+        &quot;1,  5,  0, 1&quot;,   // floor case
+        &quot;5,  5,  0, 1&quot;,   // boundary equal
+        &quot;8,  2,  3, 3&quot;    // armor applied
+    })
+    void calculateMonsterDamageFloorsAtOne(int atk, int def, int armor, int expected) {
+<span class="fc" id="L56">        Player p = new Player(&quot;P&quot;, 10, 0, def, new Inventory(1));</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (armor &gt; 0) p.equipArmor(new Armor(&quot;A&quot;, &quot;d&quot;, armor));</span>
+<span class="fc" id="L58">        Monster m = new Monster(&quot;M&quot;, 10, atk, 0, List.of());</span>
+<span class="fc" id="L59">        assertEquals(expected, calc.calculateMonsterDamage(m, p));</span>
+<span class="fc" id="L60">    }</span>
+
+    @Test
+    void bossUsesNormalAttackWhenAboveHalfHealth() {
+<span class="fc" id="L64">        Player p = new Player(&quot;P&quot;, 10, 0, 0, new Inventory(1));</span>
+<span class="fc" id="L65">        BossMonster boss = new BossMonster(&quot;Boss&quot;, 40, 10, 0, List.of(), 5);</span>
+        // full HP, no enrage
+<span class="fc" id="L67">        assertEquals(10, calc.calculateMonsterDamage(boss, p));</span>
+<span class="fc" id="L68">    }</span>
+
+    @Test
+    void bossUsesEnragedAttackWhenAtOrBelowHalfHealth() {
+<span class="fc" id="L72">        Player p = new Player(&quot;P&quot;, 10, 0, 0, new Inventory(1));</span>
+<span class="fc" id="L73">        BossMonster boss = new BossMonster(&quot;Boss&quot;, 40, 10, 0, List.of(), 5);</span>
+<span class="fc" id="L74">        boss.takeDamage(20); // exactly half HP =&gt; enraged</span>
+<span class="fc" id="L75">        assertEquals(15, calc.calculateMonsterDamage(boss, p));</span>
+
+<span class="fc" id="L77">        boss.takeDamage(1); // below half</span>
+<span class="fc" id="L78">        assertEquals(15, calc.calculateMonsterDamage(boss, p));</span>
+<span class="fc" id="L79">    }</span>
+
+    @Test
+    void bossEnrageBoundaryIsInclusive() {
+        // mutation target: replacing &lt;= with &lt; in BossMonster.getCurrentAttack.
+        // At maxHealth/2 exactly, we should see enraged damage.
+<span class="fc" id="L85">        Player p = new Player(&quot;P&quot;, 10, 0, 0, new Inventory(1));</span>
+<span class="fc" id="L86">        BossMonster boss = new BossMonster(&quot;Boss&quot;, 20, 8, 0, List.of(), 4);</span>
+<span class="fc" id="L87">        boss.takeDamage(10); // health = 10, maxHealth/2 = 10 =&gt; at boundary</span>
+<span class="fc" id="L88">        assertEquals(12, calc.calculateMonsterDamage(boss, p),</span>
+<span class="fc" id="L89">                &quot;Boss should enrage at exactly half HP&quot;);</span>
+<span class="fc" id="L90">    }</span>
+
+    @Test
+    void plainMonsterUsesItsOwnAttackValue() {
+        // Ensures the instanceof check is NOT treated as always-true, which would
+        // call getCurrentAttack on non-boss monsters (doesn't compile, but the
+        // branch for regular monsters is what we verify here).
+<span class="fc" id="L97">        Player p = new Player(&quot;P&quot;, 10, 0, 0, new Inventory(1));</span>
+<span class="fc" id="L98">        Monster m = new Monster(&quot;Ghost&quot;, 10, 7, 0, List.of());</span>
+<span class="fc" id="L99">        assertEquals(7, calc.calculateMonsterDamage(m, p));</span>
+<span class="fc" id="L100">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>haunted-university-basement (1) (Apr 16, 2026 1:35:27 PM)</div></body></html>

@@ -17,9 +17,9 @@ import com.example.haunted.rules.TrapResolver;
 /**
  * File:    TestMovementEngine.java
  * Author:  Jack Belleville
- * Desc:    Mutation-analysis tests for MovementEngine. Targets the three main
+ * Desc:    Mutation analysis tests for MovementEngine. Targets the three main
  *          branches of move(): no exit, locked target, successful move; plus
- *          the trap-trigger sub-branch and the disarming of one-time traps.
+ *          the trap trigger sub-branch and the disarming of one-time traps.
  */
 public class TestMovementEngine {
 

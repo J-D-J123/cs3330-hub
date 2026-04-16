@@ -196,7 +196,7 @@ public class TestDungeonFactory {
         assertFalse(engine.isGameWon());
     }
 
-    /** Walk the room graph starting at the stairwell to locate any room by id. */
+// walk the room graph starting at the stairwell to locate any room by id.
     private Room findRoomById(String id) {
         java.util.Set<Room> visited = new java.util.HashSet<>();
         java.util.Deque<Room> stack = new java.util.ArrayDeque<>();

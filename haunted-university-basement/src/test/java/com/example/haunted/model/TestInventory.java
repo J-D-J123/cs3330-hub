@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * File:    TestInventory.java
  * Author:  Jack Belleville
- * Desc:    Mutation-analysis tests for Inventory. Targets the isFull boundary
+ * Desc:    Mutation analysis tests for Inventory. Targets the isFull boundary
  *          (>= capacity), case-insensitive item lookup, and removeItem edge
  *          cases (present/absent).
  */

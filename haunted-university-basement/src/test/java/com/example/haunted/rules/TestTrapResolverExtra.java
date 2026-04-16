@@ -13,7 +13,7 @@ import com.example.haunted.model.TrapType;
 /**
  * File:    TestTrapResolverExtra.java
  * Author:  Jack Belleville
- * Desc:    Supplemental mutation-analysis tests for TrapResolver. Targets the
+ * Desc:    Supplemental mutation analysis tests for TrapResolver. Targets the
  *          one-time-trigger disarm branch and the non-one-time stays-armed
  *          branch - mutation operators on boolean fields will flip these.
  */

@@ -13,9 +13,9 @@ import com.example.haunted.model.Key;
 /**
  * File:    TestResultObjects.java
  * Author:  Jack Belleville
- * Desc:    Mutation-analysis tests for the three event/result DTOs. These
+ * Desc:    Mutation analysis tests for the three event/result DTOs. These
  *          tests lock down the exact field values returned by the getters and
- *          the defensive-copy behavior of CombatResult.getDroppedItems().
+ *          the defensive copy behavior of CombatResult.getDroppedItems().
  */
 public class TestResultObjects {
 
@@ -40,7 +40,7 @@ public class TestResultObjects {
         // mutating the source list must not affect the result
         drops.add(new Key("X", "d"));
         assertEquals(1, r.getDroppedItems().size());
-        // and the returned view is unmodifiable
+        // the returned view is unmodifiable
         assertThrows(UnsupportedOperationException.class,
                 () -> r.getDroppedItems().add(new Key("Y", "d")));
     }

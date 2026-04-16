@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * File:    TestQuest.java
  * Author:  Jack Belleville
- * Desc:    Mutation-analysis tests for Quest. Targets the status-transition
+ * Desc:    Mutation analysis tests for Quest. Targets the status-transition
  *          branches inside updateStatus (NOT_STARTED -> IN_PROGRESS ->
  *          COMPLETED) and the isComplete check.
  */

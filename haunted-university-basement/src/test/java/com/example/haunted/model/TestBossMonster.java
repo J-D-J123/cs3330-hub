@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 /**
  * File:    TestBossMonster.java
  * Author:  Jack Belleville
- * Desc:    Mutation-analysis tests for BossMonster. Specifically exercises the
+ * Desc:    Mutation analysis tests for BossMonster. Specifically exercises the
  *          boundary condition on getCurrentAttack (health <= maxHealth/2).
  */
 public class TestBossMonster {

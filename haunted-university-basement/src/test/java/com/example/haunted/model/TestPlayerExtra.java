@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 /**
  * File:    TestPlayerExtra.java
  * Author:  Jack Belleville
- * Desc:    Supplemental mutation-analysis tests for Player. Targets the
+ * Desc:    Supplemental mutation analysis tests for Player. Targets the
  *          Math.max/Math.min clamping in takeDamage and heal, the
  *          attack/defense power computation (weapon + armor branches),
  *          and equip null-guards.

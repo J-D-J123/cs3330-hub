@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * File:    TestItemTypes.java
  * Author:  Jack Belleville
- * Desc:    Mutation-analysis tests for Item subclasses - Weapon, Armor,
+ * Desc:    Mutation analysis tests for Item subclasses - Weapon, Armor,
  *          Potion, Key, QuestItem - and the Item base class behavior
  *          (name, description, toString, null-guard).
  */

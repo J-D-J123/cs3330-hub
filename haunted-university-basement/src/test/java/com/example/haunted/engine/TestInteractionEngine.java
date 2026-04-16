@@ -23,10 +23,10 @@ import com.example.haunted.rules.QuestTracker;
 /**
  * File:    TestInteractionEngine.java
  * Author:  Jack Belleville
- * Desc:    Mutation-analysis tests for InteractionEngine. Covers every branch
- *          of pickUpItem, useItem, equipItem, and unlockRoom - including
- *          inventory-full handling, non-equippable/non-usable items, missing
- *          keys, already-unlocked rooms, and rooms with no required key.
+ * Desc:    Mutation analysis tests for InteractionEngine. Covers every branch
+ *          of pickUpItem, useItem, equipItem, and unlockRoom including
+ *          full inventory handling, non-equippable/non-usable items, missing
+ *          keys, already unlocked rooms, and rooms with no required key.
  */
 public class TestInteractionEngine {
 
@@ -130,6 +130,7 @@ public class TestInteractionEngine {
 
     @Test
     void equipArmorSucceeds() {
+    	
         player.getInventory().addItem(new Armor("Shield", "d", 2));
         InteractionResult r = engine.equipItem(player, "Shield");
         assertTrue(r.isSuccess());
@@ -207,8 +208,9 @@ public class TestInteractionEngine {
 
     @Test
     void pickUpNullNameReturnsNotFound() {
-        // Room.removeItemByName tolerates null (equalsIgnoreCase(null) is false),
+        // Room.removeItemByName tolerates null (equalsIgnoreCase(null) is false)
         // so the engine reports "Item not found in the room." and nothing explodes.
+    	
         room.addItem(new Key("X", "d"));
         InteractionResult r = engine.pickUpItem(player, quest, null);
         assertFalse(r.isSuccess());

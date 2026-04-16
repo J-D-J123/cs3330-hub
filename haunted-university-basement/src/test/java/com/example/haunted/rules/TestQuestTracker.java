@@ -16,7 +16,7 @@ import com.example.haunted.model.QuestItem;
 /**
  * File:    TestQuestTracker.java
  * Author:  Jack Belleville
- * Desc:    Mutation-analysis tests for QuestTracker. Targets the null checks,
+ * Desc:    Mutation analysis tests for QuestTracker. Targets the null checks,
  *          the case-insensitive name match, and the "monster must be dead"
  *          branch.
  */

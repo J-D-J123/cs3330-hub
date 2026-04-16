@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * File:    TestRoom.java
  * Author:  Jack Belleville
- * Desc:    Mutation-analysis tests for Room. Targets locked/unlocked branches,
+ * Desc:    Mutation analysis tests for Room. Targets locked/unlocked branches,
  *          key-matching logic, case-insensitive item/monster lookup, and
  *          hasLivingMonsters.
  */

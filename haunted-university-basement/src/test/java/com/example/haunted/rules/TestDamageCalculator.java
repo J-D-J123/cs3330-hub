@@ -18,7 +18,7 @@ import com.example.haunted.model.Weapon;
 /**
  * File:    TestDamageCalculator.java
  * Author:  Jack Belleville
- * Desc:    Mutation-analysis tests for DamageCalculator. Targets the Math.max(1, ...)
+ * Desc:    Mutation analysis tests for DamageCalculator. Targets the Math.max(1, ...)
  *          floor (conditional boundary mutation) and the BossMonster enrage branch
  *          inside calculateMonsterDamage.
  */

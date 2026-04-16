@@ -27,7 +27,6 @@ import com.example.haunted.events.CombatResult;
 import com.example.haunted.model.Inventory;
 import com.example.haunted.model.Monster;
 import com.example.haunted.model.Player;
-import com.example.haunted.model.Quest;
 import com.example.haunted.rules.DamageCalculator;
 import com.example.haunted.rules.QuestTracker;
 

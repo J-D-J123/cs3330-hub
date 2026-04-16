@@ -1,4 +1,8 @@
-# AI Prompts Log — Group Assignment #3 (Haunted University Basement)
+# AI Prompts Log: Group Assignment #3 (Haunted University Basement)
+
+This document contains every prompt I gave the AI during this assignment, in
+chronological order, as required by the assignment's academic-integrity policy
+(Section 9).
 
 **Member:** Jack Belleville
 
@@ -7,10 +11,6 @@
 **Model:** Claude Opus 4.6
 
 **Date:** 2026-04-16
-
-This document contains every prompt I gave the AI during this assignment, in
-chronological order, as required by the assignment's academic-integrity policy
-(Section 9).
 
 ## Prompts (in order)
 
@@ -68,8 +68,6 @@ chronological order, as required by the assignment's academic-integrity policy
 ### 15.
 > Write the run instructions (for eclipse) in @README.md
 
----
-
 ## What the AI produced
 
 - **`pom.xml` updates** — added comments above existing dependencies/plugins and
@@ -82,3 +80,20 @@ chronological order, as required by the assignment's academic-integrity policy
 - Line coverage: **98%**
 - Mutation coverage: **96%**
 - Test strength: **97%**
+
+---
+
+# AI Prompts Log — Group Assignment #3 (Haunted University Basement)
+
+**Member:** Joey Johnson
+
+**AI Tool:** 
+
+**Model:** 
+
+**Date:** 2026-04-16
+
+## Prompts (in order)
+
+### 1.
+

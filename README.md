@@ -1,4 +1,5 @@
 # cs3330-hub
+Jack (JackBelleville), Tucker (TuckerPMIZ), Joey (J-D-J123)
 
 
 ## To Get Started 

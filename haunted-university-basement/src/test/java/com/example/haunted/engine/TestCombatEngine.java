@@ -105,6 +105,10 @@ public class TestCombatEngine {
     }
 
     // test that loot from a defeated monster actually ends up in the dropped items list
+    /**
+     * the testGetDroppedItems() method makes a new Player named joey and a new Monster named ghost 
+     * 	and checks to see after joey kills the ghost if joey gets the room1Key object that the ghost had
+     */
     @Test
     void testGetDroppedItems() {
     	

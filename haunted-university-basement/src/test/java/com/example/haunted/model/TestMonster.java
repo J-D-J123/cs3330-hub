@@ -5,17 +5,20 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
+/* Name: Tucker Potts
+*	This function tests the monster class.
+*
+*/
 public class TestMonster {
 	
 	@ParameterizedTest
-	@CsvSource({
+	@CsvSource({//who is a more iconic monster?
 		"Frankenstein, 500, 70, 25"
 	})
 	void isGettersWorkingForMonster(String name, int health, int damage, int defense) {
 		Monster monster = new Monster(name, health, damage, defense, new ArrayList<>());
 		
-		assertAll(
+		assertAll(//just checks if getters are working properly
 				() -> assertEquals(name, monster.getName()),
 				() -> assertEquals(health, monster.getHealth()),
 				() -> assertEquals(health, monster.getMaxHealth()),
@@ -25,7 +28,7 @@ public class TestMonster {
 	}
 	
 	@Test
-	void healthIsReducedForTakeDamage() {
+	void healthIsReducedForTakeDamage() {//Test to make sure health is properly reduced
 		Monster monster = new Monster("Frankenstein", 500, 70, 25, new ArrayList<>());
 		
 		monster.takeDamage(100);
@@ -34,7 +37,7 @@ public class TestMonster {
 	}
 	
 	@Test
-	void noNegativeDamage() {
+	void noNegativeDamage() {//test to see if takeDamage might add health or do something wrong
 		Monster monster = new Monster("Frankenstein", 500, 70, 25, new ArrayList<>());
 		
 		monster.takeDamage(-50);
@@ -43,7 +46,7 @@ public class TestMonster {
 	}
 	
 	@Test
-	void makeSureIsAliveWorks() {
+	void makeSureIsAliveWorks() {//tests to see if monsters die when they take the right amount of damage
 		Monster monster = new Monster("Frankenstein", 500, 70, 25, new ArrayList<>());
 		
 		monster.takeDamage(501);

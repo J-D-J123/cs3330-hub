@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-/* Name: Tucker Potts
-*	This test class tests the monster class.
+/*  File: TestMonster.java
+*	Name: Tucker Potts
+*	Desc: This test class tests the getters and takeDamage methods to see if it works properly
+*	and if the monster dies.
 *
 */
 public class TestMonster {

@@ -68,19 +68,6 @@ chronological order, as required by the assignment's academic-integrity policy
 ### 15.
 > Write the run instructions (for eclipse) in @README.md
 
-## What the AI produced
-
-- **`pom.xml` updates** — added comments above existing dependencies/plugins and
-  added the Pitest plugin with JUnit 5 adapter (HTML/CSV/XML output formats).
-- 
-- AI_PROMPTS.md file
-
-## Final numbers
-
-- Line coverage: **98%**
-- Mutation coverage: **96%**
-- Test strength: **97%**
-
 ---
 
 # AI Prompts Log: Group Assignment #3 (Haunted University Basement)
@@ -147,38 +134,37 @@ chronological order, as required by the assignment's academic-integrity policy
 ## Prompts (in order)
 
 ### 1.
-	> do i need the src/test/java path or do i just add 
-	to src/test/java/com/example/haunted/model/?
+> do i need the src/test/java path or do i just add to src/test/java/com/example/haunted/model/?
 	
 ### 2. 
-	> so is the src/test/java the output from the maven build?
+> so is the src/test/java the output from the maven build?
 	
 ### 3. 
-	> no i want to test the src/main/java not the src/test/java 
+> no i want to test the src/main/java not the src/test/java 
 	
 ### 4. 
-	> so i only change trap test.java in test/?
+> so i only change trap test.java in test/?
 	
 ### 5. 
-	> Okay so my TrapTest in my junit test cases is having 0% coverage idk why 	it is not covering anything for my TrapTest.java please take a look at it
+> Okay so my TrapTest in my junit test cases is having 0% coverage idk why 	it is not covering anything for my TrapTest.java please take a look at it
 
 ### 6. 
-	> so i only change trap test.java in test/?
+> so i only change trap test.java in test/?
 	
 ### 7. 
-	> when i make a new file such as TestTrapResolver.java should i put it in 	src/test/java or src/test???????????
+> when i make a new file such as TestTrapResolver.java should i put it in 	src/test/java or src/test???????????
 	
 ### 8. 
-	> so should i delete my test folder entirely?
+> so should i delete my test folder entirely?
 	
 ### 9. 
-	> no i meant like my other test one which just has test/java classes not 	the src/test/java
+> no i meant like my other test one which just has test/java classes not 	the src/test/java
 	
 ### 10. 
-	> doesnt the testAttack method need of quest?
+> doesnt the testAttack method need of quest?
 	
 ### 11. 
-	> is there a way to get rid of the static Stream of arguments?
+> is there a way to get rid of the static Stream of arguments?
 	
 ### 12. 
-	> what are your thoughts on my testGetDroppedItems()
+> what are your thoughts on my testGetDroppedItems()

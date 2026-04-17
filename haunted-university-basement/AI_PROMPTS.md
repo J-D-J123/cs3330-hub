@@ -138,13 +138,47 @@ chronological order, as required by the assignment's academic-integrity policy
 
 **Member:** Joey Johnson
 
-**AI Tool:** 
+**AI Tool:*Claude (Anthropic) via Claude Code CLI* 
 
-**Model:** 
+**Model:*Sonnet 4.6* 
 
 **Date:** 2026-04-16
 
 ## Prompts (in order)
 
 ### 1.
+	> do i need the src/test/java path or do i just add 
+	to src/test/java/com/example/haunted/model/?
+	
+### 2. 
+	> so is the src/test/java the output from the maven build?
+	
+### 3. 
+	> no i want to test the src/main/java not the src/test/java 
+	
+### 4. 
+	> so i only change trap test.java in test/?
+	
+### 5. 
+	> Okay so my TrapTest in my junit test cases is having 0% coverage idk why 	it is not covering anything for my TrapTest.java please take a look at it
 
+### 6. 
+	> so i only change trap test.java in test/?
+	
+### 7. 
+	> when i make a new file such as TestTrapResolver.java should i put it in 	src/test/java or src/test???????????
+	
+### 8. 
+	> so should i delete my test folder entirely?
+	
+### 9. 
+	> no i meant like my other test one which just has test/java classes not 	the src/test/java
+	
+### 10. 
+	> doesnt the testAttack method need of quest?
+	
+### 11. 
+	> is there a way to get rid of the static Stream of arguments?
+	
+### 12. 
+	> what are your thoughts on my testGetDroppedItems()
